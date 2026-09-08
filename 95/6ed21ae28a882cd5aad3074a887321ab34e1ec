@@ -1,0 +1,41 @@
+src/components/StatsBar.tsx
+  s_b94c02043ef1de::t_f465aa582bab70 9-10,12-21,24-33
+src/components/LeaderboardRow.tsx
+  s_b94c02043ef1de::t_36e8af2aae5d94 3,11-28,31-32,36-39,42-47,50-52,60,62,64,68-70,75,77,80,90-91,93-96,98,101-103,105
+src/components/Navbar.tsx
+  s_b94c02043ef1de::t_536b34707b2981 5-12,14-22,26-32,34-38,40-44,46-47,50-52,54,56-57
+src/components/SkillChip.tsx
+  s_b94c02043ef1de::t_ca31bf74f0a7de 3,6,8-16
+src/components/CategoryPills.tsx
+  s_b94c02043ef1de::t_e0f2fc0cf7f209 32-38,40
+tailwind.config.ts
+  s_b94c02043ef1de::t_9e2c30c098296f 12-15,17-19,22-23,25-26,28-30,34-76
+src/components/TimeToggle.tsx
+  s_b94c02043ef1de::t_58ca0a985d3bb5 6-8,29,34-39
+src/components/ActivityFeed.tsx
+  s_b94c02043ef1de::t_d65ccc2e833b60 20-22,27,29-32,34-35,39,41-49,51,54-60,62,68
+src/app/page.tsx
+  s_b94c02043ef1de::t_643f2d9685f212 42,49-112,121,134,147,156-161,172-173,177-179,194,196-197,200-202,205-206,208
+src/app/layout.tsx
+  s_b94c02043ef1de::t_e1d1e7bcec1860 21-22,25-76
+src/components/BidWidget.tsx
+  s_b94c02043ef1de::t_765d38764b8d71 12-20,23-24,29-31,33,36-37
+src/app/globals.css
+  s_b94c02043ef1de::t_38276663d8c091 1,7,9-12,16-17,21-22,26-94,96-125,128-131,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "956ed21ae28a882cd5aad3074a887321ab34e1ec",
+  "prompts": {},
+  "sessions": {
+    "s_b94c02043ef1de": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "475030",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
