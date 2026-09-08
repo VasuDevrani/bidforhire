@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── NextAuth Models ──────────────────────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String     @id @default(cuid())
+  name          String?
+  email         String?    @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  recruiter     Recruiter?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─── App Models ───────────────────────────────────────────────
+
+model Candidate {
+  id           String   @id @default(cuid())
+  name         String
+  role         String
+  roleSlug     String
+  skills       String[]
+  summary      String
+  socialLinks  Json     // { linkedin?, x?, portfolio?, github? }
+  email        String   // GATED — never in public API
+  phone        String?  // GATED — never in public API
+  currentBid   Int      // in cents, drives rank
+  rank         Int?     // computed, recalculated on bid change
+  category     String   // top-level: Engineering, Design, Marketing, Sales, Ops
+  status       String   @default("pending") // "pending" | "active"
+
+  // Public metrics — all safe to expose, none touch PII
+  profileViews Int      @default(0)
+  unlockCount  Int      @default(0)
+  bidCount     Int      @default(0)
+  peakRank     Int?
+  daysListed   Int      @default(0)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bids    Bid[]
+  unlocks Unlock[]
+  views   ProfileView[]
+
+  @@index([status, currentBid(sort: Desc)])
+  @@index([roleSlug])
+  @@index([category])
+}
+
+model ProfileView {
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  viewerHash  String    // hashed IP+UA+date for dedup, not raw IP
+  createdAt   DateTime  @default(now())
+
+  @@unique([candidateId, viewerHash])
+}
+
+model Bid {
+  id            String    @id @default(cuid())
+  candidateId   String
+  candidate     Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  amount        Int       // cents
+  dodoPaymentId String    @unique // idempotency / audit
+  createdAt     DateTime  @default(now())
+
+  @@index([candidateId])
+  @@index([createdAt])
+}
+
+model Recruiter {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email       String   @unique
+  companyName String?
+  createdAt   DateTime @default(now())
+
+  unlocks Unlock[]
+}
+
+model Unlock {
+  id            String    @id @default(cuid())
+  recruiterId   String
+  recruiter     Recruiter @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  candidateId   String
+  candidate     Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  dodoPaymentId String    @unique
+  unlockedAt    DateTime  @default(now())
+
+  @@unique([recruiterId, candidateId])
+  @@index([candidateId])
+  @@index([unlockedAt])
+}
