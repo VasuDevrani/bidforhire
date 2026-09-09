@@ -1,0 +1,20 @@
+src/lib/auth.ts
+  s_3ac041ef70ac32::t_1129b67a1fda58 15-17
+  s_3ac041ef70ac32::t_e312f1c4c355b8 39-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "4a4356c47ffabe94b8f3d78331539fa2f425db10",
+  "prompts": {},
+  "sessions": {
+    "s_3ac041ef70ac32": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "474983",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
