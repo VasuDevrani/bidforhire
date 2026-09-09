@@ -1,0 +1,19 @@
+src/app/candidate/[id]/page.tsx
+  s_42973e05e075e1::t_686e41999f205d 1,17-18,24,40-51,54-55,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "f0b92413751ad25b5997d6ec468d6e1aeb5ed3b2",
+  "prompts": {},
+  "sessions": {
+    "s_42973e05e075e1": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "475889",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
