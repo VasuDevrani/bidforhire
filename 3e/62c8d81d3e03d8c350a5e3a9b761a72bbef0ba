@@ -1,0 +1,23 @@
+src/app/page.tsx
+  s_3ac041ef70ac32::t_7f26572e644a8e 3-4,34-35,40,109-119
+src/components/SignOutButton.tsx
+  s_3ac041ef70ac32::t_19f7f0d512deed 1-14
+src/components/Navbar.tsx
+  s_3ac041ef70ac32::t_3153913d634d9a 2-9,34-42,55-67,70-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "3e62c8d81d3e03d8c350a5e3a9b761a72bbef0ba",
+  "prompts": {},
+  "sessions": {
+    "s_3ac041ef70ac32": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "474983",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
