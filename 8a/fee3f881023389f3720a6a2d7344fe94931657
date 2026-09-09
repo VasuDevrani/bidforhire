@@ -1,0 +1,26 @@
+src/app/api/checkout/rebid/route.ts
+  s_3ac041ef70ac32::t_4ff36a2c6cba75 1-113
+src/app/candidate/[id]/page.tsx
+  s_3ac041ef70ac32::t_9ccb1069710a63 9,46-52
+  s_3ac041ef70ac32::t_5388438e783b92 7
+src/components/BoostBidWidget.tsx
+  s_3ac041ef70ac32::t_79830f8964875e 1-102
+src/app/layout.tsx
+  s_3ac041ef70ac32::t_1ac5b1d109ac97 5,21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8afee3f881023389f3720a6a2d7344fe94931657",
+  "prompts": {},
+  "sessions": {
+    "s_3ac041ef70ac32": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "474983",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
