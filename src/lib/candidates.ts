@@ -51,7 +51,7 @@ export type LeaderboardOptions = {
 };
 
 export async function getLeaderboard(options: LeaderboardOptions = {}) {
-  const { category, timeframe = 'all', page = 1, pageSize = 50 } = options;
+  const { category, timeframe = 'all', page = 1, pageSize = 20 } = options;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: Record<string, any> = { status: 'active' };

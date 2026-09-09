@@ -185,25 +185,50 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
             {/* Pagination */}
             {leaderboard.pageCount > 1 && (
-              <div className="mt-8 flex justify-center gap-2">
-                {Array.from({ length: leaderboard.pageCount }, (_, i) => i + 1).map((p) => (
+              <div className="mt-8 flex flex-wrap justify-center items-center gap-2">
+                {/* Prev */}
+                {page > 1 ? (
                   <Link
-                    key={p}
-                    href={`?${new URLSearchParams({
-                      ...(category ? { category } : {}),
-                      ...(timeframe !== 'all' ? { timeframe } : {}),
-                      page: String(p),
-                    })}`}
-                    className={`btn-pop rounded-full border-2 border-foreground px-3 py-1.5
-                                font-display text-sm font-bold shadow-pop-sm
-                                ${p === page
-                                  ? 'bg-accent text-white'
-                                  : 'bg-white text-foreground hover:bg-tertiary'
-                                }`}
+                    href={`?${new URLSearchParams({ ...(category ? { category } : {}), ...(timeframe !== 'all' ? { timeframe } : {}), page: String(page - 1) })}`}
+                    className="btn-pop rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
                   >
-                    {p}
+                    ← Prev
                   </Link>
-                ))}
+                ) : (
+                  <span className="rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
+                    ← Prev
+                  </span>
+                )}
+
+                {/* Page number window */}
+                {buildPageWindow(page, leaderboard.pageCount).map((p, i) =>
+                  p === '...' ? (
+                    <span key={`ellipsis-${i}`} className="px-1 font-bold text-muted-foreground">…</span>
+                  ) : (
+                    <Link
+                      key={p}
+                      href={`?${new URLSearchParams({ ...(category ? { category } : {}), ...(timeframe !== 'all' ? { timeframe } : {}), page: String(p) })}`}
+                      className={`btn-pop flex h-9 w-9 items-center justify-center rounded-full border-2 border-foreground font-display text-sm font-bold shadow-pop-sm
+                                  ${p === page ? 'bg-accent text-white' : 'bg-white text-foreground hover:bg-tertiary'}`}
+                    >
+                      {p}
+                    </Link>
+                  )
+                )}
+
+                {/* Next */}
+                {page < leaderboard.pageCount ? (
+                  <Link
+                    href={`?${new URLSearchParams({ ...(category ? { category } : {}), ...(timeframe !== 'all' ? { timeframe } : {}), page: String(page + 1) })}`}
+                    className="btn-pop rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
+                  >
+                    Next →
+                  </Link>
+                ) : (
+                  <span className="rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
+                    Next →
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -226,6 +251,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       </div>
     </>
   );
+}
+
+/** Returns an array of page numbers and '...' ellipsis markers for the pagination bar. */
+function buildPageWindow(current: number, total: number): (number | '...')[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages: (number | '...')[] = [1];
+  if (current > 3) pages.push('...');
+  for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) {
+    pages.push(p);
+  }
+  if (current < total - 2) pages.push('...');
+  pages.push(total);
+  return pages;
 }
 
 function EmptyState({ timeframe }: { timeframe: string }) {
