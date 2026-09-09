@@ -4,7 +4,9 @@ import { headers } from 'next/headers';
 import crypto from 'crypto';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 import { getCandidatePublicProfile, getCandidateContactInfo, recordProfileView } from '@/lib/candidates';
+import { BoostBidWidget } from '@/components/BoostBidWidget';
 import { getRecruiterByUserId } from '@/lib/recruiters';
 import { SkillChip } from '@/components/SkillChip';
 import { UnlockButton } from '@/components/UnlockButton';
@@ -40,6 +42,14 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
   const dateStr = new Date().toISOString().slice(0, 10);
   const viewerHash = crypto.createHash('sha256').update(`${ip}:${dateStr}`).digest('hex');
   await recordProfileView(params.id, viewerHash);
+
+  // Fetch current leaderboard #1 bid for BoostBidWidget minimum calculation
+  const topCandidate = await prisma.candidate.findFirst({
+    where: { status: 'active' },
+    orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
+    select: { currentBid: true },
+  });
+  const topBidCents = topCandidate?.currentBid ?? 100;
 
   const session = await getServerSession(authOptions);
   const userId = (session?.user as { id?: string })?.id;
@@ -178,6 +188,13 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
           </ul>
         </div>
       )}
+
+      {/* Boost bid — lets this candidate increase their bid without re-submitting the form */}
+      <BoostBidWidget
+        candidateId={params.id}
+        currentBidCents={candidate.currentBid}
+        topBidCents={topBidCents}
+      />
     </div>
   );
 }
