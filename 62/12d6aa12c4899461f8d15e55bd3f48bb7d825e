@@ -1,0 +1,22 @@
+src/app/page.tsx
+  s_42973e05e075e1::t_bf54c815aad0ce 188-190,192-193,195,197-231
+  s_42973e05e075e1::t_84b5eb46742011 256-268
+src/lib/candidates.ts
+  s_42973e05e075e1::t_1b49b47b0cf1bf 54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "6212d6aa12c4899461f8d15e55bd3f48bb7d825e",
+  "prompts": {},
+  "sessions": {
+    "s_42973e05e075e1": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "475889",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
