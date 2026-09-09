@@ -12,6 +12,9 @@ function isWorkEmailServer(email: string): boolean {
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     EmailProvider({
       server: {
@@ -33,9 +36,9 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    session({ session, user }) {
-      if (session.user) {
-        (session.user as { id?: string }).id = user.id;
+    session({ session, token }) {
+      if (session.user && token.sub) {
+        (session.user as { id?: string }).id = token.sub;
       }
       return session;
     },
