@@ -1,5 +1,7 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 import { getLeaderboard, getSiteStats, getRecentActivity } from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
 import { BidWidget } from '@/components/BidWidget';
@@ -29,11 +31,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const page = Number(searchParams.page) || 1;
   const categoryFilter = category || undefined;
 
-  const [leaderboard, stats, activity] = await Promise.all([
+  const [session, leaderboard, stats, activity] = await Promise.all([
+    getServerSession(authOptions),
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
   ]);
+  const isRecruiter = !!session?.user;
 
   const topBid = leaderboard.candidates[0]?.currentBid ?? 100;
 
@@ -102,15 +106,17 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 </span>
               </Link>
 
-              {/* Secondary button */}
-              <Link
-                href="/recruiter/signup"
-                className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
-                           bg-transparent px-6 py-3 font-display text-base font-bold
-                           text-foreground hover:bg-tertiary"
-              >
-                I'm Hiring
-              </Link>
+              {/* "I'm Hiring" only shown to non-recruiters */}
+              {!isRecruiter && (
+                <Link
+                  href="/recruiter/signup"
+                  className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
+                             bg-transparent px-6 py-3 font-display text-base font-bold
+                             text-foreground hover:bg-tertiary"
+                >
+                  I&apos;m Hiring
+                </Link>
+              )}
             </div>
 
             {/* Mini stats strip */}
