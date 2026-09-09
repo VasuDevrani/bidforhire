@@ -6,23 +6,36 @@ interface StatsBarProps {
   totalRevenueCents: number;
 }
 
-export function StatsBar({ totalCandidates, totalUnlocks, totalRevenueCents }: StatsBarProps) {
-  return (
-    <div className="border-b border-border bg-white py-4">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-around gap-4 px-4 text-center">
-        <Stat label="Total Revenue" value={formatCents(totalRevenueCents)} />
-        <Stat label="Active Candidates" value={String(totalCandidates)} />
-        <Stat label="Contact Unlocks" value={String(totalUnlocks)} />
-      </div>
-    </div>
-  );
-}
+const DIVIDER = (
+  <span className="inline-flex h-2 w-2 shrink-0 rounded-full bg-tertiary" />
+);
 
-function Stat({ label, value }: { label: string; value: string }) {
+export function StatsBar({ totalCandidates, totalUnlocks, totalRevenueCents }: StatsBarProps) {
+  const items = [
+    `${formatCents(totalRevenueCents)} paid out`,
+    `${totalCandidates} active candidates`,
+    `${totalUnlocks} contact unlocks`,
+    `higher bid = more visibility`,
+    `pay once · stay listed forever`,
+    `real bids. real visibility.`,
+  ];
+
+  const track = [...items, ...items, ...items, ...items];
+
   return (
-    <div>
-      <div className="text-xl font-black text-stone-900">{value}</div>
-      <div className="text-xs text-muted">{label}</div>
+    <div className="overflow-hidden border-y-2 border-foreground bg-accent py-3">
+      <div className="flex animate-marquee gap-10 whitespace-nowrap">
+        {track.map((item, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-4 font-display text-xs font-bold
+                       uppercase tracking-widest text-white"
+          >
+            <span>{item}</span>
+            {DIVIDER}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

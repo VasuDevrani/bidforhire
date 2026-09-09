@@ -1,4 +1,6 @@
-export const MIN_BID_CENTS = Number(process.env.MIN_BID_CENTS) || 100; // $1
+export const MIN_BID_CENTS = 100; // $1 — minimum to list
+export const MAX_BID_CENTS = 99_999_900; // $999,999 hard cap
+export const MIN_OUTBID_INCREASE_CENTS = 100; // must beat current #1 by at least $1
 export const UNLOCK_PRICE_CENTS = Number(process.env.UNLOCK_PRICE_CENTS) || 500; // $5
 export const MAX_UNLOCKS_PER_DAY = 20;
 

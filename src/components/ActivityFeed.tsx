@@ -17,46 +17,62 @@ interface ActivityFeedProps {
 export function ActivityFeed({ activities }: ActivityFeedProps) {
   if (activities.length === 0) {
     return (
-      <p className="py-4 text-center text-sm text-muted">No activity yet — be the first!</p>
+      <div className="flex flex-col items-center gap-2 py-6 text-center">
+        <span className="text-3xl">🌱</span>
+        <p className="text-sm text-muted-foreground">No activity yet — be the first!</p>
+      </div>
     );
   }
 
   return (
-    <ul className="divide-y divide-border">
+    <ul className="space-y-2">
       {activities.map((a, i) => (
-        <li key={i} className="flex items-center gap-3 py-2.5">
-          {/* Icon */}
+        <li
+          key={i}
+          className="flex items-start gap-2.5 rounded-lg border border-border bg-muted/40 p-2.5"
+        >
+          {/* Colored icon badge */}
           <span
-            className={`text-lg ${a.type === 'bid' ? 'text-accent' : 'text-emerald-500'}`}
+            className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs
+                        ${a.type === 'bid'
+                          ? 'bg-accent/10 text-accent'
+                          : 'bg-quaternary/20 text-quaternary'
+                        }`}
           >
-            {a.type === 'bid' ? '⬆' : '🔓'}
+            {a.type === 'bid' ? '↑' : '🔓'}
           </span>
 
           {/* Description */}
-          <div className="min-w-0 flex-1 text-sm">
+          <div className="min-w-0 flex-1 text-xs font-medium leading-snug">
             {a.type === 'bid' ? (
-              <span className="text-stone-800">
+              <span className="text-foreground/80">
                 Someone bid{' '}
-                <span className="font-semibold text-accent">{formatCents(a.amountCents)}</span> to
-                list{' '}
-                <Link href={`/candidate/${a.candidateId}`} className="font-medium text-stone-900 hover:text-accent">
+                <span className="font-bold text-accent">{formatCents(a.amountCents)}</span>
+                {' '}to list{' '}
+                <Link
+                  href={`/candidate/${a.candidateId}`}
+                  className="font-semibold text-foreground hover:text-accent"
+                >
                   {a.candidateName}
                 </Link>{' '}
-                <span className="text-muted">({a.candidateRole})</span>
+                <span className="text-muted-foreground">({a.candidateRole})</span>
               </span>
             ) : (
-              <span className="text-stone-800">
+              <span className="text-foreground/80">
                 A recruiter unlocked{' '}
-                <Link href={`/candidate/${a.candidateId}`} className="font-medium text-stone-900 hover:text-accent">
+                <Link
+                  href={`/candidate/${a.candidateId}`}
+                  className="font-semibold text-foreground hover:text-accent"
+                >
                   {a.candidateName}
                 </Link>{' '}
-                <span className="text-muted">({a.candidateRole})</span>
+                <span className="text-muted-foreground">({a.candidateRole})</span>
               </span>
             )}
           </div>
 
           {/* Time */}
-          <span className="shrink-0 text-xs text-muted">{timeAgo(a.createdAt)}</span>
+          <span className="shrink-0 text-xs text-muted-foreground">{timeAgo(a.createdAt)}</span>
         </li>
       ))}
     </ul>

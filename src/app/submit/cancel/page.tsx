@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { ArrowLeft, RotateCcw } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Payment Cancelled — BidForHire',
@@ -8,24 +9,30 @@ export const metadata: Metadata = {
 export default function SubmitCancelPage() {
   return (
     <div className="mx-auto max-w-md px-4 py-20 text-center">
-      <div className="mb-4 text-5xl">↩</div>
-      <h1 className="mb-3 text-2xl font-black text-white">Payment cancelled</h1>
-      <p className="mb-8 text-muted">
-        No charge was made. You can try again whenever you&apos;re ready.
-      </p>
-      <div className="flex justify-center gap-3">
-        <Link
-          href="/submit"
-          className="rounded-lg bg-accent px-5 py-2.5 font-semibold text-black hover:bg-accent-hover"
-        >
-          Try Again
-        </Link>
-        <Link
-          href="/"
-          className="rounded-lg border border-border px-5 py-2.5 font-semibold text-white hover:border-white"
-        >
-          Back to Leaderboard
-        </Link>
+      <div className="rounded-2xl border-2 border-foreground bg-card p-8 shadow-pop">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border-2 border-foreground bg-tertiary/20 shadow-pop-amber">
+          <RotateCcw className="h-7 w-7 text-amber-600" />
+        </div>
+        <h1 className="font-display text-3xl font-black text-foreground">Payment cancelled</h1>
+        <p className="mt-3 text-muted-foreground">
+          No charge was made. You can try again whenever you&apos;re ready.
+        </p>
+        <div className="mt-7 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/submit"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent px-5 py-2.5 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:shadow-pop-active"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Try Again
+          </Link>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-card px-5 py-2.5 font-bold text-foreground shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:shadow-pop-active"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Leaderboard
+          </Link>
+        </div>
       </div>
     </div>
   );

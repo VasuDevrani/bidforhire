@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { getDodoClient } from '@/lib/dodo';
-import { MIN_BID_CENTS, CATEGORIES, CATEGORY_SLUGS } from '@/lib/constants';
+import {
+  MAX_BID_CENTS,
+  MIN_BID_CENTS,
+  MIN_OUTBID_INCREASE_CENTS,
+  CATEGORIES,
+  CATEGORY_SLUGS,
+} from '@/lib/constants';
 import { slugify } from '@/lib/utils';
 import type { CountryCode } from 'dodopayments/resources/misc/supported-countries';
 
@@ -26,14 +32,37 @@ export async function POST(req: NextRequest) {
     if (!CATEGORIES.includes(category)) {
       return NextResponse.json({ error: 'Invalid category' }, { status: 400 });
     }
-    if (typeof amountCents !== 'number' || amountCents < MIN_BID_CENTS) {
+    if (
+      !Number.isInteger(amountCents) ||
+      amountCents < MIN_BID_CENTS ||
+      amountCents > MAX_BID_CENTS
+    ) {
       return NextResponse.json(
-        { error: `Minimum bid is $${MIN_BID_CENTS / 100}` },
+        { error: `Bid must be between $${MIN_BID_CENTS / 100} and $${MAX_BID_CENTS / 100}` },
         { status: 400 }
       );
     }
     if (amountCents % 100 !== 0) {
       return NextResponse.json({ error: 'Bid must be in whole dollars' }, { status: 400 });
+    }
+
+    const currentLeader = await prisma.candidate.findFirst({
+      where: { status: 'active' },
+      orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
+      select: { currentBid: true },
+    });
+
+    if (
+      currentLeader &&
+      amountCents > currentLeader.currentBid &&
+      amountCents < currentLeader.currentBid + MIN_OUTBID_INCREASE_CENTS
+    ) {
+      return NextResponse.json(
+        {
+          error: `To take #1 you must bid at least $${(currentLeader.currentBid + MIN_OUTBID_INCREASE_CENTS) / 100} (current #1 is $${currentLeader.currentBid / 100})`,
+        },
+        { status: 400 }
+      );
     }
 
     const roleSlug = slugify(role);

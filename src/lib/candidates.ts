@@ -74,7 +74,7 @@ export async function getLeaderboard(options: LeaderboardOptions = {}) {
   const [candidates, total] = await Promise.all([
     prisma.candidate.findMany({
       where,
-      orderBy: { currentBid: 'desc' },
+      orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
@@ -140,7 +140,7 @@ export async function recordProfileView(candidateId: string, viewerHash: string)
 export async function updateCandidateRanks() {
   const candidates = await prisma.candidate.findMany({
     where: { status: 'active' },
-    orderBy: { currentBid: 'desc' },
+    orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
     select: { id: true, peakRank: true },
   });
 

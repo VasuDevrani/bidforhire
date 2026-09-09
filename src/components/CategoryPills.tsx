@@ -29,11 +29,13 @@ export function CategoryPills() {
           <button
             key={cat}
             onClick={() => setCategory(slug)}
-            className={`shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-              active
-                ? 'border-accent bg-accent text-white'
-                : 'border-border text-muted hover:border-stone-400 hover:text-stone-900'
-            }`}
+            className={`btn-pop shrink-0 rounded-full border-2 border-foreground
+                        px-4 py-1.5 font-display text-sm font-bold shadow-pop-sm
+                        transition-all duration-200
+                        ${active
+                          ? 'bg-accent text-white'
+                          : 'bg-white text-foreground hover:bg-tertiary'
+                        }`}
           >
             {cat}
           </button>

@@ -42,8 +42,8 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
     setError('');
 
     const bidDollars = parseInt(form.bidDollars, 10);
-    if (!bidDollars || bidDollars < 1) {
-      setError('Minimum bid is $1');
+    if (!bidDollars || bidDollars < 1 || bidDollars > 999_999) {
+      setError('Bid must be between $1 and $999,999');
       return;
     }
 
@@ -99,7 +99,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-xl border-2 border-red-400 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
           {error}
         </div>
       )}
@@ -172,10 +172,10 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
 
       {/* Social links */}
       <div className="space-y-3">
-        <label className="block text-sm font-medium text-white">Social / Portfolio Links</label>
+        <label className="block text-sm font-bold text-foreground">Social / Portfolio Links</label>
         {SOCIAL_FIELDS.map(({ key, label, placeholder }) => (
           <div key={key}>
-            <label className="mb-1 block text-xs text-muted">{label}</label>
+            <label className="mb-1.5 block text-xs font-semibold text-muted-foreground">{label}</label>
             <input
               type="url"
               placeholder={placeholder}
@@ -213,14 +213,15 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
       {/* Bid amount */}
       <Field
         label="Your Bid (USD) *"
-        hint={`Min $1 · Higher bid = higher rank · Pay once, listed forever`}
+        hint="Whole dollars only · $1 minimum · Higher bid = higher rank"
       >
         <div className="relative">
-          <span className="absolute inset-y-0 left-3 flex items-center text-muted">$</span>
+          <span className="absolute inset-y-0 left-4 flex items-center font-bold text-muted-foreground">$</span>
           <input
             type="number"
             required
             min={Math.max(initialMinBid, 1)}
+            max={999_999}
             step="1"
             value={form.bidDollars}
             onChange={(e) => set('bidDollars', e.target.value)}
@@ -232,12 +233,12 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-accent py-3 font-bold text-black transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:translate-y-0 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Creating checkout...' : `Pay $${form.bidDollars || '—'} & Get Listed`}
+        {loading ? 'Creating checkout…' : `Pay $${form.bidDollars || '—'} & Get Listed →`}
       </button>
 
-      <p className="text-center text-xs text-muted">
+      <p className="text-center text-xs text-muted-foreground">
         Your listing goes live immediately after payment confirms.
       </p>
     </form>
@@ -255,12 +256,12 @@ function Field({
 }) {
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-white">{label}</label>
+      <label className="mb-1.5 block text-sm font-bold text-foreground">{label}</label>
       {children}
-      {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
+      {hint && <p className="mt-1.5 text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 }
 
 const inputClass =
-  'w-full rounded-lg border border-border bg-bg px-3 py-2.5 text-sm text-white placeholder-muted/60 outline-none transition-colors focus:border-accent';
+  'w-full rounded-xl border-2 border-foreground bg-background px-4 py-2.5 text-sm text-foreground placeholder-muted-foreground/50 outline-none transition-all focus:border-accent focus:shadow-pop-sm';

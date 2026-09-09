@@ -53,20 +53,20 @@ export function UnlockButton({ candidateId, isAuthenticated }: UnlockButtonProps
       <button
         onClick={handleUnlock}
         disabled={loading}
-        className="w-full rounded-lg bg-accent py-3 font-bold text-black transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading
-          ? 'Creating checkout...'
+          ? 'Creating checkout…'
           : isAuthenticated
-          ? 'Unlock Contact — $5'
-          : 'Sign In to Unlock — $5'}
+          ? 'Unlock Contact — $5 →'
+          : 'Sign In to Unlock — $5 →'}
       </button>
       {!isAuthenticated && (
-        <p className="mt-1.5 text-center text-xs text-muted">
+        <p className="mt-1.5 text-center text-xs text-muted-foreground">
           Requires a free recruiter account
         </p>
       )}
-      {error && <p className="mt-2 text-center text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
     </div>
   );
 }
