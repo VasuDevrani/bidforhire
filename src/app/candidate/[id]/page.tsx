@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
@@ -13,12 +14,14 @@ import { UnlockButton } from '@/components/UnlockButton';
 import { formatCents, timeAgo } from '@/lib/utils';
 import Link from 'next/link';
 
+const getCandidateForPage = cache((id: string) => getCandidatePublicProfile(id));
+
 interface CandidatePageProps {
   params: { id: string };
 }
 
 export async function generateMetadata({ params }: CandidatePageProps): Promise<Metadata> {
-  const candidate = await getCandidatePublicProfile(params.id);
+  const candidate = await getCandidateForPage(params.id);
   if (!candidate) return { title: 'Candidate Not Found' };
   return {
     title: `${candidate.name} — ${candidate.role}`,
@@ -34,24 +37,29 @@ const RANK_COLORS = [
 ];
 
 export default async function CandidatePage({ params }: CandidatePageProps) {
-  const candidate = await getCandidatePublicProfile(params.id);
+  // Run all independent queries in parallel — candidate fetch, top bid, and session
+  // don't depend on each other so there's no reason to waterfall them.
+  const [candidate, topCandidate, session] = await Promise.all([
+    getCandidateForPage(params.id),
+    prisma.candidate.findFirst({
+      where: { status: 'active' },
+      orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
+      select: { currentBid: true },
+    }),
+    getServerSession(authOptions),
+  ]);
+
   if (!candidate) notFound();
 
+  // Fire-and-forget — recording a view is a write-only side effect.
+  // The result is never read here, so don't block rendering on it.
   const headerList = headers();
   const ip = headerList.get('x-forwarded-for') ?? headerList.get('x-real-ip') ?? 'unknown';
   const dateStr = new Date().toISOString().slice(0, 10);
   const viewerHash = crypto.createHash('sha256').update(`${ip}:${dateStr}`).digest('hex');
-  await recordProfileView(params.id, viewerHash);
+  recordProfileView(params.id, viewerHash); // intentionally not awaited
 
-  // Fetch current leaderboard #1 bid for BoostBidWidget minimum calculation
-  const topCandidate = await prisma.candidate.findFirst({
-    where: { status: 'active' },
-    orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
-    select: { currentBid: true },
-  });
   const topBidCents = topCandidate?.currentBid ?? 100;
-
-  const session = await getServerSession(authOptions);
   const userId = (session?.user as { id?: string })?.id;
   const isAuthenticated = !!session?.user;
   let contactInfo: { email: string; phone: string | null } | null = null;
