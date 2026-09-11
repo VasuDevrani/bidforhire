@@ -1,0 +1,19 @@
+src/app/page.tsx
+  s_9d2bce21f14cde::t_524ad91e803140 53-73,76-85,89,92,100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "437b66dc41bffb8c579751affbe57187114b6a5c",
+  "prompts": {},
+  "sessions": {
+    "s_9d2bce21f14cde": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478031",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
