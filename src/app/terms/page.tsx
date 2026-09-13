@@ -97,7 +97,7 @@ const sections = [
     title: '6. Payments',
     content: (
       <p className="text-muted-foreground leading-relaxed">
-        All prices are in USD. Payments are processed by Dodo Payments. All sales are final.
+            Payments are processed by Razorpay. All sales are final.
         No refunds are issued once a listing is live or a contact is unlocked.
       </p>
     ),

@@ -202,6 +202,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
         candidateId={params.id}
         currentBidCents={candidate.currentBid}
         topBidCents={topBidCents}
+        currentRank={candidate.rank}
       />
     </div>
   );

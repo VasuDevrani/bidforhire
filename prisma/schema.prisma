@@ -101,12 +101,12 @@ model ProfileView {
 }
 
 model Bid {
-  id            String    @id @default(cuid())
-  candidateId   String
-  candidate     Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  amount        Int       // cents
-  dodoPaymentId String    @unique // idempotency / audit
-  createdAt     DateTime  @default(now())
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  amount      Int       // cents
+  paymentId   String    @unique @map("dodoPaymentId") // idempotency / audit
+  createdAt   DateTime  @default(now())
 
   @@index([candidateId])
   @@index([createdAt])
@@ -129,7 +129,7 @@ model Unlock {
   recruiter     Recruiter @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
   candidateId   String
   candidate     Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  dodoPaymentId String    @unique
+  paymentId   String    @unique @map("dodoPaymentId")
   unlockedAt    DateTime  @default(now())
 
   @@unique([recruiterId, candidateId])

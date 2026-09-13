@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getDodoClient } from '@/lib/dodo';
+import { getRazorpayClient } from '@/lib/razorpay';
+import { getCountryCode, getCurrencyForCountry, usdCentsToRazorpay } from '@/lib/currency';
 import { MAX_BID_CENTS, MIN_BID_CENTS, MIN_OUTBID_INCREASE_CENTS } from '@/lib/constants';
-import type { CountryCode } from 'dodopayments/resources/misc/supported-countries';
 
 /**
  * POST /api/checkout/rebid
  *
  * Lets an existing active candidate increase their bid without re-submitting the form.
- * The webhook handler already handles updating currentBid when metadata.type === 'bid'.
+ * Creates a Razorpay order; the verify endpoint (called by the client after checkout)
+ * updates currentBid using the same 'bid' metadata type.
  *
  * Body: { candidateId: string, newAmountCents: number }
+ *
+ * Response:
+ *   { orderId, amount, currency, keyId, candidateId }
  */
 export async function POST(req: NextRequest) {
   try {
@@ -78,34 +82,40 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const amountDollars = newAmountCents / 100;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    // The user only pays the top-up (new total minus what they've already paid).
+    const topUpCents = newAmountCents - candidate.currentBid;
 
-    const dodo = getDodoClient();
-    const payment = await dodo.payments.create({
-      billing: { city: 'N/A', country: 'US' as CountryCode, state: 'N/A', street: 'N/A', zipcode: 0 },
-      customer: { email: candidate.email, name: candidate.name },
-      product_cart: [
-        {
-          product_id: process.env.DODO_PRODUCT_ID_BID!,
-          quantity: amountDollars,
-        },
-      ],
-      payment_link: true,
-      // Return to their own profile page after payment
-      return_url: `${appUrl}/candidate/${candidateId}?boosted=1`,
-      metadata: {
+    // Convert the top-up amount to the user's local currency for the Razorpay order.
+    const userCurrency = getCurrencyForCountry(getCountryCode(req.headers));
+    const { amount: rzpAmount, currency: rzpCurrency } = await usdCentsToRazorpay(topUpCents, userCurrency);
+
+    const razorpay = getRazorpayClient();
+    const order = await razorpay.orders.create({
+      amount: rzpAmount,
+      currency: rzpCurrency,
+      receipt: `rebid_${candidate.id.slice(0, 27)}`,
+      notes: {
         type: 'bid',
         candidateId: candidate.id,
-        amountCents: String(newAmountCents),
+        // usdCents = the NEW TOTAL bid — verify uses this to set currentBid in the DB.
+        // The Razorpay order amount is just the top-up; the DB must store the full new bid.
+        usdCents: String(newAmountCents),
+        topUpCents: String(topUpCents), // informational — not used by verify
       },
     });
 
-    if (!payment.payment_link) {
-      return NextResponse.json({ error: 'Failed to create payment link' }, { status: 500 });
+    if (!order?.id) {
+      return NextResponse.json({ error: 'Failed to create payment order' }, { status: 500 });
     }
 
-    return NextResponse.json({ paymentLink: payment.payment_link });
+    return NextResponse.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? process.env.RAZORPAY_KEY_ID,
+      candidateId: candidate.id,
+      topUpCents, // let the UI show exactly what the user is being charged
+    });
   } catch (err) {
     console.error('[checkout/rebid]', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

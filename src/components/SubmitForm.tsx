@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { CATEGORIES } from '@/lib/constants';
+import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 
 const SOCIAL_FIELDS = [
   { key: 'linkedin', label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/...' },
@@ -65,6 +66,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
 
     setLoading(true);
     try {
+      // Step 1: create a Razorpay order server-side
       const res = await fetch('/api/checkout/bid', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,14 +86,64 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || 'Something went wrong');
+        setLoading(false);
         return;
       }
 
-      // Redirect to Dodo hosted checkout
-      window.location.href = data.paymentLink;
+      // Step 2: load Razorpay checkout.js and open the modal
+      const ready = await loadRazorpayCheckout();
+      if (!ready) {
+        setError('Could not load payment gateway — please check your connection and try again.');
+        setLoading(false);
+        return;
+      }
+
+      const rzp = new window.Razorpay({
+        key: data.keyId ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
+        amount: data.amount,
+        currency: data.currency,
+        name: 'BidForHire',
+        description: `Bid $${bidDollars} — get listed`,
+        order_id: data.orderId,
+        prefill: { name: form.name, email: form.email },
+        theme: { color: '#6366f1' },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            setError("Payment was cancelled. Your draft has been saved — try again whenever you're ready.");
+          },
+        },
+        handler: async (response) => {
+          // Step 3: verify the payment server-side and activate the listing
+          try {
+            const verifyRes = await fetch('/api/checkout/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (!verifyRes.ok || !verifyData.success) {
+              setError(verifyData.error || 'Payment verification failed. Contact support.');
+              setLoading(false);
+              return;
+            }
+            // Redirect to success page
+            window.location.href = `/submit/success?candidateId=${data.candidateId}`;
+          } catch {
+            setError('Verification failed — if you were charged, contact support.');
+            setLoading(false);
+          }
+        },
+      });
+
+      rzp.open();
+      // Note: setLoading(false) is handled inside handler/ondismiss
     } catch {
       setError('Network error — please try again');
-    } finally {
       setLoading(false);
     }
   }
@@ -235,7 +287,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
         disabled={loading}
         className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:translate-y-0 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Creating checkout…' : `Pay $${form.bidDollars || '—'} & Get Listed →`}
+        {loading ? 'Opening checkout…' : `Pay $${form.bidDollars || '—'} & Get Listed →`}
       </button>
 
       <p className="text-center text-xs text-muted-foreground">

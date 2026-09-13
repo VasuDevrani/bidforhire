@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { UNLOCK_PRICE_CENTS } from '@/lib/constants';
+import { Prisma } from '@prisma/client';
 import type { Candidate } from '@prisma/client';
 
 export type PublicCandidate = {
@@ -141,19 +142,27 @@ export async function updateCandidateRanks() {
   const candidates = await prisma.candidate.findMany({
     where: { status: 'active' },
     orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
-    select: { id: true, peakRank: true },
+    select: { id: true },
   });
 
-  await Promise.all(
-    candidates.map((c, index) => {
-      const newRank = index + 1;
-      const newPeak = c.peakRank === null || newRank < c.peakRank ? newRank : c.peakRank;
-      return prisma.candidate.update({
-        where: { id: c.id },
-        data: { rank: newRank, peakRank: newPeak },
-      });
-    })
-  );
+  if (candidates.length === 0) return;
+
+  // Single bulk UPDATE instead of N individual queries.
+  // Builds: UPDATE "Candidate" SET rank = v.new_rank, "peakRank" = ... FROM (VALUES ...) AS v
+  const rows = candidates.map((c, i) => Prisma.sql`(${c.id}, ${i + 1})`);
+
+  await prisma.$executeRaw`
+    UPDATE "Candidate" AS c
+    SET
+      rank         = v.new_rank,
+      "peakRank"   = CASE
+                       WHEN c."peakRank" IS NULL OR v.new_rank < c."peakRank"
+                       THEN v.new_rank
+                       ELSE c."peakRank"
+                     END
+    FROM (VALUES ${Prisma.join(rows)}) AS v(id, new_rank)
+    WHERE c.id = v.id
+  `;
 }
 
 export async function getSiteStats() {

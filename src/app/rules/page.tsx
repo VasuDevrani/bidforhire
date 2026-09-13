@@ -181,7 +181,7 @@ const sections: SectionDef[] = [
     shadow: 'shadow-pop-amber',
     content: (
       <p className="text-muted-foreground leading-relaxed">
-        Prices are in USD and payments are processed by Dodo Payments. Payments are final once a
+            Payments are processed by Razorpay. Payments are final once a
         listing is activated or contact details are unlocked. If a technical issue prevents the
         purchased action from being delivered, contact support so we can investigate. By paying or
         using BidForHire, you agree to these Rules, the{' '}

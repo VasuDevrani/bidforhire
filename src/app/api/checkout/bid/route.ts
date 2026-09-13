@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { getDodoClient } from '@/lib/dodo';
+import { getRazorpayClient } from '@/lib/razorpay';
+import { getCountryCode, getCurrencyForCountry, usdCentsToRazorpay } from '@/lib/currency';
 import {
   MAX_BID_CENTS,
   MIN_BID_CENTS,
@@ -9,18 +10,24 @@ import {
   CATEGORY_SLUGS,
 } from '@/lib/constants';
 import { slugify } from '@/lib/utils';
-import type { CountryCode } from 'dodopayments/resources/misc/supported-countries';
 
 /**
  * POST /api/checkout/bid
  *
- * Creates a pending candidate record and returns a Dodo payment link.
- * The webhook handler activates the candidate once payment succeeds.
+ * Creates a pending candidate record and returns a Razorpay order.
+ * The client opens the Razorpay checkout modal; on success it calls
+ * /api/checkout/verify which activates the candidate.
  *
  * Body:
  *   name, role, category, skills[], summary, socialLinks, email, phone?, amountCents
+ *
+ * Response:
+ *   { orderId, amount, currency, keyId, candidateId }
  */
 export async function POST(req: NextRequest) {
+  // Track the pending candidate ID so we can clean it up if the Razorpay call fails.
+  let pendingCandidateId: string | null = null;
+
   try {
     const body = await req.json();
     const { name, role, category, skills, summary, socialLinks, email, phone, amountCents } = body;
@@ -68,7 +75,7 @@ export async function POST(req: NextRequest) {
     const roleSlug = slugify(role);
     const categorySlug = CATEGORY_SLUGS[category] ?? slugify(category);
 
-    // Create pending candidate — goes live only after payment webhook
+    // Create pending candidate — goes live only after payment is verified
     const candidate = await prisma.candidate.create({
       data: {
         name: name.trim(),
@@ -80,44 +87,54 @@ export async function POST(req: NextRequest) {
         email: email.toLowerCase().trim(),
         phone: phone ? String(phone).trim() : null,
         currentBid: amountCents,
-        category: categorySlug, // store slug, display name resolved in UI
+        category: categorySlug,
         status: 'pending',
       },
     });
+    pendingCandidateId = candidate.id;
 
-    // Create Dodo payment link
-    // DODO_PRODUCT_ID_BID must be a product priced at $1.00 in your Dodo dashboard.
-    // quantity = amountCents / 100  →  charges the right dollar amount.
-    const amountDollars = amountCents / 100;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    // Convert USD cents to the user's local currency for the Razorpay order.
+    // The canonical USD-cent value is preserved in notes.usdCents for DB consistency.
+    const userCurrency = getCurrencyForCountry(getCountryCode(req.headers));
+    const { amount: rzpAmount, currency: rzpCurrency } = await usdCentsToRazorpay(amountCents, userCurrency);
 
-    const dodo = getDodoClient();
-    const payment = await dodo.payments.create({
-      billing: { city: 'N/A', country: 'US' as CountryCode, state: 'N/A', street: 'N/A', zipcode: 0 },
-      customer: { email: email.toLowerCase().trim(), name: name.trim() },
-      product_cart: [
-        {
-          product_id: process.env.DODO_PRODUCT_ID_BID!,
-          quantity: amountDollars,
-        },
-      ],
-      payment_link: true,
-      return_url: `${appUrl}/submit/success?candidateId=${candidate.id}`,
-      metadata: {
+    const razorpay = getRazorpayClient();
+    const order = await razorpay.orders.create({
+      amount: rzpAmount,
+      currency: rzpCurrency,
+      receipt: `bid_${candidate.id.slice(0, 30)}`,
+      notes: {
         type: 'bid',
         candidateId: candidate.id,
-        amountCents: String(amountCents),
+        usdCents: String(amountCents), // always USD cents — used by verify/webhook for DB writes
       },
     });
 
-    if (!payment.payment_link) {
-      // Cleanup orphaned pending candidate if Dodo didn't give us a link
+    if (!order?.id) {
       await prisma.candidate.delete({ where: { id: candidate.id } });
-      return NextResponse.json({ error: 'Failed to create payment link' }, { status: 500 });
+      pendingCandidateId = null;
+      return NextResponse.json({ error: 'Failed to create payment order' }, { status: 500 });
     }
 
-    return NextResponse.json({ paymentLink: payment.payment_link, candidateId: candidate.id });
+    // Order created — candidate is safe, no cleanup needed
+    pendingCandidateId = null;
+
+    return NextResponse.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      // NEXT_PUBLIC_RAZORPAY_KEY_ID and RAZORPAY_KEY_ID must be the same value.
+      // Fall back to RAZORPAY_KEY_ID so the modal still works if the NEXT_PUBLIC_ var is missing.
+      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? process.env.RAZORPAY_KEY_ID,
+      candidateId: candidate.id,
+    });
   } catch (err) {
+    // If a pending candidate was created before the error, delete it to avoid orphans
+    if (pendingCandidateId) {
+      await prisma.candidate.delete({ where: { id: pendingCandidateId } }).catch(() => {
+        // best-effort cleanup — ignore secondary errors
+      });
+    }
     console.error('[checkout/bid]', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { getDodoClient } from '@/lib/dodo';
+import { getRazorpayClient } from '@/lib/razorpay';
+import { getCountryCode, getCurrencyForCountry, usdCentsToRazorpay } from '@/lib/currency';
 import { checkUnlockRateLimit, hasAlreadyUnlocked, getRecruiterByUserId } from '@/lib/recruiters';
-import type { CountryCode } from 'dodopayments/resources/misc/supported-countries';
+import { UNLOCK_PRICE_CENTS } from '@/lib/constants';
 
 /**
  * POST /api/checkout/unlock
@@ -12,7 +13,10 @@ import type { CountryCode } from 'dodopayments/resources/misc/supported-countrie
  * Body: { candidateId: string }
  *
  * Requires recruiter to be authenticated.
- * Creates a Dodo payment link for a $5 contact unlock.
+ * Creates a Razorpay order for the contact unlock fee.
+ *
+ * Response:
+ *   { orderId, amount, currency, keyId, candidateId }
  */
 export async function POST(req: NextRequest) {
   try {
@@ -61,32 +65,34 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+    // Convert USD cents to the user's local currency for the Razorpay order.
+    const userCurrency = getCurrencyForCountry(getCountryCode(req.headers));
+    const { amount: rzpAmount, currency: rzpCurrency } = await usdCentsToRazorpay(UNLOCK_PRICE_CENTS, userCurrency);
 
-    const dodo = getDodoClient();
-    const payment = await dodo.payments.create({
-      billing: { city: 'N/A', country: 'US' as CountryCode, state: 'N/A', street: 'N/A', zipcode: 0 },
-      customer: { email: recruiter.email, name: recruiter.companyName ?? 'Recruiter' },
-      product_cart: [
-        {
-          product_id: process.env.DODO_PRODUCT_ID_UNLOCK!,
-          quantity: 1,
-        },
-      ],
-      payment_link: true,
-      return_url: `${appUrl}/recruiter/dashboard?unlocked=${candidateId}`,
-      metadata: {
+    const razorpay = getRazorpayClient();
+    const order = await razorpay.orders.create({
+      amount: rzpAmount,
+      currency: rzpCurrency,
+      receipt: `unlock_${candidateId.slice(0, 28)}`,
+      notes: {
         type: 'unlock',
         candidateId,
         recruiterId: recruiter.id,
+        usdCents: String(UNLOCK_PRICE_CENTS),
       },
     });
 
-    if (!payment.payment_link) {
-      return NextResponse.json({ error: 'Failed to create payment link' }, { status: 500 });
+    if (!order?.id) {
+      return NextResponse.json({ error: 'Failed to create payment order' }, { status: 500 });
     }
 
-    return NextResponse.json({ paymentLink: payment.payment_link });
+    return NextResponse.json({
+      orderId: order.id,
+      amount: order.amount,
+      currency: order.currency,
+      keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? process.env.RAZORPAY_KEY_ID,
+      candidateId,
+    });
   } catch (err) {
     console.error('[checkout/unlock]', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

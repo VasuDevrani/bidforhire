@@ -45,7 +45,7 @@ const sections = [
         {[
           'To display your public profile on the leaderboard',
           'To send you a sign-in magic link (recruiters)',
-          'To process payments via Dodo Payments',
+              'To process payments via Razorpay',
           'To fulfil contact unlocks — your email/phone is shared only with recruiters who pay',
         ].map((item) => (
           <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -79,7 +79,7 @@ const sections = [
     title: 'Payments',
     content: (
       <p className="text-muted-foreground leading-relaxed">
-        Payment processing is handled by Dodo Payments. We do not store card details.
+            Payment processing is handled by Razorpay. We do not store card details.
         Payment metadata (amount, type) is stored for audit and idempotency purposes.
       </p>
     ),

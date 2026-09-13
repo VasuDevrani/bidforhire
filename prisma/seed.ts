@@ -335,7 +335,7 @@ async function main() {
       data: {
         candidateId: candidate.id,
         amount: data.currentBid,
-        dodoPaymentId: `seed_bid_${i + 1}`,
+        paymentId: `seed_bid_${i + 1}`,
         createdAt: candidate.createdAt,
       },
     });
