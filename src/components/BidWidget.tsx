@@ -53,17 +53,21 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
   }
 
   return (
-    <div className="rounded-2xl border-2 border-foreground bg-card p-5">
+    <div className="relative">
+      <div className="rounded-2xl border-2 border-foreground bg-card p-5 pt-7">
       <div className="relative">
-        <div className="mb-0.5 font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
-          Current #1 Bid
-        </div>
-        <div className="mb-3 font-display text-4xl font-extrabold text-accent">
-          {formatCents(topBidCents)}
+        {/* Current leader row */}
+        <div className="mb-3 flex items-baseline gap-2">
+          <span className="font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
+            Current Leader
+          </span>
+          <span className="font-display text-2xl font-extrabold text-accent leading-none">
+            {formatCents(topBidCents)}
+          </span>
         </div>
 
         <p className="mb-5 text-sm font-medium leading-relaxed text-muted-foreground">
-          Outbid to claim the top spot. Your profile gets seen first by every recruiter who visits.
+          Outbid #1 to be the first candidate recruiters see.
         </p>
 
         {/* Stepper control: Claim #[rank] for [-] $[amount] [+] */}
@@ -138,7 +142,9 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
                      font-display text-sm font-black text-foreground transition-all hover:-translate-y-0.5 active:translate-y-0"
         >
           <span>
-            Claim #{predictedRank} for ${bidDollars}
+            {predictedRank === 1
+              ? `Outbid and Take #1`
+              : `Claim #${predictedRank} for $${bidDollars}`}
           </span>
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-tertiary">
             <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
@@ -148,6 +154,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
         <p className="mt-3 text-center text-xs font-medium text-muted-foreground">
           Minimum $1 · Beat #1 by $1 · Pay once
         </p>
+      </div>
       </div>
     </div>
   );

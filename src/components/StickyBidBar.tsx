@@ -115,7 +115,7 @@ export function StickyBidBar({ topBidCents, allBidsCents }: StickyBidBarProps) {
             className="btn-pop flex shrink-0 items-center gap-1.5 rounded-full border-2 border-foreground bg-tertiary px-3 py-2 font-display text-sm font-black text-foreground shadow-pop transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
             <span className="whitespace-nowrap">
-              Claim for ${bidDollars}
+              {predictedRank === 1 ? 'Outbid #1' : `Claim #${predictedRank}`}
             </span>
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-foreground text-tertiary">
               <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
