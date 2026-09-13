@@ -1,0 +1,47 @@
+src/components/NavbarCta.tsx
+  s_a4d27b1f1d9092::t_f3c9983ff3c767 1-2,4-14,34-49,52-65
+  s_a4d27b1f1d9092::t_e5493a64f53675 3,15-33,50-51
+src/app/page.tsx
+  s_a4d27b1f1d9092::t_357a356fd848de 12,50-51,229-231
+  s_a4d27b1f1d9092::t_563911c1c90ce1 77-78,81,83
+  s_ebe05af1da25f2::t_213b3ef41edbe7 64-65,104-106,110-111
+  s_a4d27b1f1d9092::t_1f14d28e6f2596 213-216
+src/components/Navbar.tsx
+  s_a4d27b1f1d9092::t_f8f89f1587dea9 5,71-72
+src/components/TopPodium.tsx
+  s_ebe05af1da25f2::t_9bb1b8f1283211 42,50,58,90,115
+src/components/StickyBidBar.tsx
+  s_a4d27b1f1d9092::t_15cf442a3c2d13 118
+  s_a4d27b1f1d9092::t_84561e82275fc7 58
+  s_a4d27b1f1d9092::t_3c03c10a8ac5c1 1-57,59-117,119-128
+src/app/submit/page.tsx
+  s_a4d27b1f1d9092::t_fef500682e5f65 29
+src/app/recruiter/signup/page.tsx
+  s_a4d27b1f1d9092::t_9f7648c574b201 25
+src/components/BidWidget.tsx
+  s_a4d27b1f1d9092::t_d2405d0c7868d8 56,70,76,99,117,126,138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "f6ad4e8e0607c8ae3e4b07163b6188c307fe0256",
+  "prompts": {},
+  "sessions": {
+    "s_a4d27b1f1d9092": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478124",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    },
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
