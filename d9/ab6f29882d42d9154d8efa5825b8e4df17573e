@@ -1,0 +1,25 @@
+src/app/candidate/[id]/page.tsx
+  s_b59aa3ff98b257::t_f42594952231d2 10,67,73-76,181-185
+src/components/UnlockButton.tsx
+  s_b59aa3ff98b257::t_c229db86e6ad30 6,11-12,15,20-46,48,50-51,89,123-163,166-168,170,174
+src/lib/constants.ts
+  s_b59aa3ff98b257::t_aaa2f475dfd454 6
+src/app/api/recruiter/unlock-free/route.ts
+  s_b59aa3ff98b257::t_1a704ba1002b7c 1-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "d9ab6f29882d42d9154d8efa5825b8e4df17573e",
+  "prompts": {},
+  "sessions": {
+    "s_b59aa3ff98b257": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478122",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
