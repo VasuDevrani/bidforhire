@@ -7,6 +7,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { getCandidatePublicProfile, getCandidateContactInfo, recordProfileView } from '@/lib/candidates';
+import { FREE_UNLOCKS_PER_RECRUITER } from '@/lib/constants';
 import { BoostBidWidget } from '@/components/BoostBidWidget';
 import { getRecruiterByUserId } from '@/lib/recruiters';
 import { SkillChip } from '@/components/SkillChip';
@@ -63,11 +64,16 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
   const userId = (session?.user as { id?: string })?.id;
   const isAuthenticated = !!session?.user;
   let contactInfo: { email: string; phone: string | null } | null = null;
+  let freeUnlocksRemaining = 0;
 
   if (userId) {
     const recruiter = await getRecruiterByUserId(userId);
     if (recruiter) {
       contactInfo = await getCandidateContactInfo(params.id, recruiter.id);
+      if (!contactInfo) {
+        const used = await prisma.unlock.count({ where: { recruiterId: recruiter.id } });
+        freeUnlocksRemaining = Math.max(0, FREE_UNLOCKS_PER_RECRUITER - used);
+      }
     }
   }
 
@@ -172,10 +178,11 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
         ) : (
           <div>
             <h2 className="mb-1 font-bold text-foreground">Want to reach {candidate.name}?</h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Pay $5 to unlock their email and phone number (if provided). One-time fee, access forever.
-            </p>
-            <UnlockButton candidateId={params.id} isAuthenticated={isAuthenticated} />
+            <UnlockButton
+              candidateId={params.id}
+              isAuthenticated={isAuthenticated}
+              freeUnlocksRemaining={freeUnlocksRemaining}
+            />
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ export const MAX_BID_CENTS = 99_999_900; // $999,999 hard cap
 export const MIN_OUTBID_INCREASE_CENTS = 100; // must beat current #1 by at least $1
 export const UNLOCK_PRICE_CENTS = Number(process.env.UNLOCK_PRICE_CENTS) || 500; // $5
 export const MAX_UNLOCKS_PER_DAY = 20;
+export const FREE_UNLOCKS_PER_RECRUITER = 3;
 
 export const CATEGORIES = ['Engineering', 'Design', 'Marketing', 'Sales', 'Ops'] as const;
 export type Category = (typeof CATEGORIES)[number];
