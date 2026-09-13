@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { RecruiterSignupForm } from '@/components/RecruiterSignupForm';
-import { Building2, Unlock, CalendarCheck, Archive, ArrowRight } from 'lucide-react';
+import { Building2, Unlock, CalendarCheck, Archive, ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Recruiter Sign In — BidForHire',
@@ -28,7 +27,7 @@ export default function RecruiterSignupPage({ searchParams }: SignupPageProps) {
         href="/"
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        ← Back to leaderboard
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to leaderboard
       </Link>
 
       {/* Header */}

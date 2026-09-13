@@ -101,14 +101,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </Link>
                 )}
               </div>
-              {/* Stats \u2014 only show unlocks (candidates moved to the badge above) */}
-              {stats.totalUnlocks >= 5 && (
-                <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
-                  <span>
-                    <span className="font-display font-extrabold text-accent">{stats.totalUnlocks}</span>{' '}unlocks
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         </div>

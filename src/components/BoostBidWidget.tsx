@@ -114,7 +114,7 @@ export function BoostBidWidget({
   }
 
   return (
-    <div className="mt-4 rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop">
+    <div className="mt-4 rounded-2xl border border-border bg-card p-5">
       {/* Header */}
       <div className="mb-1 flex items-center gap-2">
         <TrendingUp className="h-4 w-4 text-accent" />

@@ -169,7 +169,7 @@ export function UnlockButton({
         </p>
         <button
           onClick={() => router.push(`/recruiter/signup?callbackUrl=/candidate/${candidateId}`)}
-          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active"
+          className="flex w-full items-center justify-center gap-2 rounded-full border-foreground bg-accent py-3 font-bold text-white transition-all"
         >
           Sign In with Work Email <ArrowRight className="h-4 w-4 shrink-0" />
         </button>
@@ -188,7 +188,7 @@ export function UnlockButton({
         <button
           onClick={handleLifetimeUnlock}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-accent py-3 font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Unlocking…' : (
             <span className="flex items-center gap-2">
@@ -215,7 +215,7 @@ export function UnlockButton({
         <button
           onClick={handleFreeUnlock}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full border-foreground bg-accent py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? 'Unlocking…' : (
             <span className="flex items-center gap-2">
@@ -242,7 +242,7 @@ export function UnlockButton({
       <button
         onClick={handleLifetimeCheckout}
         disabled={loading}
-        className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-full border-foreground bg-accent py-3 font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? 'Opening checkout…' : (
           <span className="flex items-center gap-2">

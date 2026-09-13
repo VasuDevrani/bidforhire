@@ -37,8 +37,8 @@ export function TimeToggle() {
           className={`px-3 py-1.5 font-display text-sm font-bold transition-colors duration-150
                       first:rounded-l-full last:rounded-r-full
                       ${current === opt.value
-                        ? 'bg-tertiary text-foreground'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        ? 'bg-muted text-foreground'
+                        : 'text-muted-foreground hover:bg-muted/60 hover:text-foreground'
                       }`}
         >
           {opt.label}

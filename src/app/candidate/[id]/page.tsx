@@ -14,6 +14,7 @@ import { SkillChip } from '@/components/SkillChip';
 import { UnlockButton } from '@/components/UnlockButton';
 import { formatCents, timeAgo } from '@/lib/utils';
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 const getCandidateForPage = cache((id: string) => getCandidatePublicProfile(id));
 
@@ -90,7 +91,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
         href="/"
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        ← Back to leaderboard
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to leaderboard
       </Link>
 
       {/* Header card */}
@@ -156,7 +157,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
       </div>
 
       {/* Contact unlock */}
-      <div className="mt-4 rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop">
+      <div className="mt-4 rounded-2xl border border-border bg-card p-5">
         {contactInfo ? (
           <div>
             <h2 className="mb-3 text-sm font-bold text-foreground uppercase tracking-wider">Contact Info (Unlocked ✓)</h2>
@@ -192,7 +193,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
 
       {/* Bid history */}
       {candidate.recentBids.length > 0 && (
-        <div className="mt-4 rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop">
+        <div className="mt-4 rounded-2xl border border-border bg-card p-5">
           <h2 className="mb-3 text-xs font-black uppercase tracking-widest text-muted-foreground">
             Bid History
           </h2>
@@ -228,7 +229,7 @@ const COLOR_MAP = {
 function StatCard({ label, value, color }: { label: string; value: string; color: keyof typeof COLOR_MAP }) {
   const c = COLOR_MAP[color];
   return (
-    <div className={`rounded-xl border-2 border-foreground ${c.bg} p-3 text-center shadow-pop-sm`}>
+    <div className={`rounded-xl border-foreground ${c.bg} p-3 text-center`}>
       <div className={`font-display text-xl font-black ${c.text}`}>{value}</div>
       <div className="mt-0.5 text-xs font-medium text-muted-foreground">{label}</div>
     </div>

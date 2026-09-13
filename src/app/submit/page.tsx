@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ListPlus, PencilLine, WalletCards, Rocket } from 'lucide-react';
+import { ListPlus, PencilLine, WalletCards, Rocket, ArrowLeft } from 'lucide-react';
 import { SubmitForm } from '@/components/SubmitForm';
 import { prisma } from '@/lib/db';
 import { formatCents } from '@/lib/utils';
@@ -32,7 +32,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
         href="/"
         className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
       >
-        ← Back to leaderboard
+            <ArrowLeft className="h-3.5 w-3.5" /> Back to leaderboard
       </Link>
 
       {/* Header */}

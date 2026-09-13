@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { getLeaderboard } from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
 import { SLUG_TO_CATEGORY } from '@/lib/constants';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -35,7 +36,7 @@ export default async function RolePage({ params, searchParams }: RolePageProps) 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <Link href="/" className="mb-6 inline-flex items-center gap-1 text-sm text-muted hover:text-white">
-        ← All categories
+            <ArrowLeft className="h-3.5 w-3.5" /> All categories
       </Link>
 
       <div className="mb-6">
