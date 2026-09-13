@@ -1,15 +1,15 @@
 'use client';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { CATEGORIES, CATEGORY_SLUGS } from '@/lib/constants';
 
 export function CategoryPills() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const current = searchParams.get('category') || 'all';
 
-  function setCategory(slug: string) {
+  function buildHref(slug: string) {
     const params = new URLSearchParams(searchParams.toString());
     if (slug === 'all') {
       params.delete('category');
@@ -17,7 +17,8 @@ export function CategoryPills() {
       params.set('category', slug);
     }
     params.delete('page');
-    router.push(`${pathname}?${params.toString()}`);
+    const qs = params.toString();
+    return `${pathname}${qs ? `?${qs}` : ''}`;
   }
 
   return (
@@ -26,9 +27,11 @@ export function CategoryPills() {
         const slug = cat === 'All' ? 'all' : CATEGORY_SLUGS[cat] || cat.toLowerCase();
         const active = slug === current;
         return (
-          <button
+          <Link
             key={cat}
-            onClick={() => setCategory(slug)}
+            href={buildHref(slug)}
+            scroll={false}
+            prefetch={true}
             className={`shrink-0 rounded-full border-2 border-foreground
                         px-4 py-1.5 font-display text-sm font-bold
                         transition-all duration-200
@@ -38,7 +41,7 @@ export function CategoryPills() {
                         }`}
           >
             {cat}
-          </button>
+          </Link>
         );
       })}
     </div>

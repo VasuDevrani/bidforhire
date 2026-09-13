@@ -1,6 +1,7 @@
 'use client';
 
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const OPTIONS = [
   { label: 'All time', value: 'all' },
@@ -9,12 +10,11 @@ const OPTIONS = [
 ] as const;
 
 export function TimeToggle() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const current = searchParams.get('timeframe') || 'all';
 
-  function setTimeframe(value: string) {
+  function buildHref(value: string) {
     const params = new URLSearchParams(searchParams.toString());
     if (value === 'all') {
       params.delete('timeframe');
@@ -22,15 +22,18 @@ export function TimeToggle() {
       params.set('timeframe', value);
     }
     params.delete('page');
-    router.push(`${pathname}?${params.toString()}`);
+    const qs = params.toString();
+    return `${pathname}${qs ? `?${qs}` : ''}`;
   }
 
   return (
     <div className="flex overflow-hidden rounded-full border-2 border-foreground bg-white">
       {OPTIONS.map((opt) => (
-        <button
+        <Link
           key={opt.value}
-          onClick={() => setTimeframe(opt.value)}
+          href={buildHref(opt.value)}
+          scroll={false}
+          prefetch={true}
           className={`px-3 py-1.5 font-display text-sm font-bold transition-colors duration-150
                       first:rounded-l-full last:rounded-r-full
                       ${current === opt.value
@@ -39,7 +42,7 @@ export function TimeToggle() {
                       }`}
         >
           {opt.label}
-        </button>
+        </Link>
       ))}
     </div>
   );
