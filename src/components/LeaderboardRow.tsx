@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Crown } from 'lucide-react';
+import { Crown, ArrowRight } from 'lucide-react';
 import { SkillChip } from './SkillChip';
 import { formatCents } from '@/lib/utils';
 import type { PublicCandidate } from '@/lib/candidates';
@@ -16,18 +16,19 @@ const TOP3_SHADOWS: Record<number, string> = {
   3: 'shadow-pop-amber',
 };
 
-/* Rank badge colour per position */
-const BADGE_COLORS = [
-  'bg-accent text-white',
-  'bg-secondary text-white',
-  'bg-tertiary text-foreground',
-  'bg-quaternary text-foreground',
-];
+/* Rank badge colour — unique colours for top 5; 6+ get a neutral badge */
+const TOP5_BADGE_COLORS: Record<number, string> = {
+  1: 'bg-accent text-white',
+  2: 'bg-secondary text-white',
+  3: 'bg-tertiary text-foreground',
+  4: 'bg-quaternary text-foreground',
+  5: 'bg-accent text-white',
+};
 
 export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
   const rank = position;
   const shadow = TOP3_SHADOWS[rank] ?? '';
-  const badgeColor = BADGE_COLORS[(rank - 1) % BADGE_COLORS.length];
+  const badgeColor = TOP5_BADGE_COLORS[rank] ?? 'bg-card text-foreground';
 
   return (
     <div
@@ -104,12 +105,12 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
 
           <Link
             href={`/submit?minBid=${Math.floor(candidate.currentBid / 100) + 1}`}
-            className="rounded-full border-2 border-foreground bg-foreground
-                       px-3 py-1.5 font-display text-xs font-bold text-white
+            className="flex items-center gap-1.5 rounded-full border-2 border-foreground
+                       bg-foreground px-3 py-1.5 font-display text-xs font-bold text-white
                        transition-all"
-        >
-          Outbid #{rank} →
-        </Link>
+          >
+            Outbid #{rank} <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+          </Link>
       </div>
     </div>
   );

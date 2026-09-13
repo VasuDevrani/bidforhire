@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Check Your Email — BidForHire',
@@ -17,7 +18,7 @@ export default function VerifyPage() {
       <p className="mt-4 text-sm text-muted">
         Didn&apos;t get it?{' '}
         <Link href="/recruiter/signup" className="text-accent hover:underline">
-          Try again →
+          <span className="inline-flex items-center gap-1">Try again <ArrowRight className="h-3.5 w-3.5" /></span>
         </Link>
       </p>
     </div>

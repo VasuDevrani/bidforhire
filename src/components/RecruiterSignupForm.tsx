@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { isWorkEmail } from '@/lib/utils';
-import { Mail } from 'lucide-react';
+import { Mail, ArrowRight } from 'lucide-react';
 
 interface RecruiterSignupFormProps {
   callbackUrl?: string;
@@ -106,9 +106,9 @@ export function RecruiterSignupForm({ callbackUrl = '/recruiter/dashboard' }: Re
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Sending…' : 'Send Magic Link →'}
+        {loading ? 'Sending…' : <><span>Send Magic Link</span><ArrowRight className="h-4 w-4 shrink-0" /></>}
       </button>
     </form>
   );

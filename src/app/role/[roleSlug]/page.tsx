@@ -4,6 +4,7 @@ import { getLeaderboard } from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
 import { SLUG_TO_CATEGORY } from '@/lib/constants';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 interface RolePageProps {
   params: { roleSlug: string };
@@ -51,7 +52,7 @@ export default async function RolePage({ params, searchParams }: RolePageProps) 
             href={`/submit`}
             className="mt-4 inline-block rounded-lg bg-accent px-5 py-2.5 font-semibold text-black hover:bg-accent-hover"
           >
-            Be the first →
+            Be the first <ArrowRight className="inline h-3.5 w-3.5" />
           </Link>
         </div>
       ) : (

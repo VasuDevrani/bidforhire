@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 
@@ -285,9 +286,9 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:translate-y-0 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+        className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:translate-y-0 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Opening checkout…' : `Pay $${form.bidDollars || '—'} & Get Listed →`}
+        {loading ? 'Opening checkout…' : <span className="flex items-center justify-center gap-2">Pay ${form.bidDollars || '—'} &amp; Get Listed <ArrowRight className="h-4 w-4 shrink-0" /></span>}
       </button>
 
       <p className="text-center text-xs text-muted-foreground">

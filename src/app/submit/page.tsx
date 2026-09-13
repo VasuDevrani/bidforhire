@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ListPlus, PencilLine, WalletCards, Rocket } from 'lucide-react';
 import { SubmitForm } from '@/components/SubmitForm';
+import { prisma } from '@/lib/db';
+import { formatCents } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Get Listed — BidForHire',
@@ -11,11 +14,27 @@ interface SubmitPageProps {
   searchParams: { minBid?: string };
 }
 
-export default function SubmitPage({ searchParams }: SubmitPageProps) {
+export default async function SubmitPage({ searchParams }: SubmitPageProps) {
   const minBid = Math.min(Math.max(Number(searchParams.minBid) || 1, 1), 999_999);
+
+  const topCandidate = await prisma.candidate.findFirst({
+    where: { status: 'active' },
+    orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
+    select: { currentBid: true },
+  });
+  const topBidCents = topCandidate?.currentBid ?? 0;
+  const nextBidDollars = Math.floor(topBidCents / 100) + 1;
 
   return (
     <div className="mx-auto max-w-xl px-4 py-12">
+      {/* Back */}
+      <Link
+        href="/"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        ← Back to leaderboard
+      </Link>
+
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="mb-3 inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent/10 px-4 py-1.5 text-sm font-bold text-accent shadow-pop-sm">
@@ -35,6 +54,25 @@ export default function SubmitPage({ searchParams }: SubmitPageProps) {
         <Step number={2} label="Set bid (min $1)" Icon={WalletCards} color="amber" />
         <Step number={3} label="Pay & go live" Icon={Rocket} color="pink" />
       </div>
+
+      {/* Current #1 bid banner */}
+      {topBidCents > 0 && (
+        <div className="mb-4 flex items-center justify-between gap-4 rounded-xl border-2 border-foreground bg-card px-5 py-4 shadow-pop-sm">
+          <div>
+            <p className="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
+              Current #1 Bid
+            </p>
+            <p className="font-display text-3xl font-extrabold text-accent">
+              {formatCents(topBidCents)}
+            </p>
+          </div>
+          <p className="text-right text-sm font-medium text-muted-foreground">
+            Bid{' '}
+            <span className="font-bold text-foreground">${nextBidDollars}+</span>
+            {' '}to take<br />the top spot
+          </p>
+        </div>
+      )}
 
       <div className="rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop sm:p-6">
         <SubmitForm initialMinBid={minBid} />

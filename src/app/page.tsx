@@ -11,6 +11,7 @@ import { TimeToggle } from '@/components/TimeToggle';
 import { StatsBar } from '@/components/StatsBar';
 import { ActivityFeed } from '@/components/ActivityFeed';
 import Link from 'next/link';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
@@ -93,8 +94,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                            bg-accent px-5 py-2 font-display text-sm font-bold text-white shadow-pop"
               >
                 List Yourself
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs text-accent font-bold">
-                  →
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </Link>
               {!isRecruiter && (
@@ -112,30 +113,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         </div>
       </section>
 
-      {/* ── Leaderboard ─────────────────────────────────────── */}
-      <div className="mx-auto max-w-6xl px-4 py-10">
-        {/* Section header */}
-        <div className="mb-6 flex flex-wrap items-center gap-3">
-          <h2 className="font-display text-2xl font-extrabold text-foreground">
-            Hiring Leaderboard
-          </h2>
-          <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground
-                           bg-secondary px-3 py-1 font-display text-xs font-bold text-white shadow-pop-sm">
-            <span className="live-dot h-1.5 w-1.5 rounded-full bg-white" />
-            live
-          </span>
-          <p className="ml-auto hidden text-sm font-medium text-muted-foreground sm:block">
-            Higher bid = more visibility ·{' '}
-            <Link href="/rules" className="text-accent hover:underline">
-              How it works →
-            </Link>
-          </p>
-        </div>
-
+      {/* ── Leaderboard ──────────────────────────────────────────────────────────────── */}
+      <div className="mx-auto max-w-6xl px-4 py-10 pt-6">
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Left: leaderboard */}
           <div className="min-w-0 flex-1">
-            {/* Filters */}
+            {/* Filters + "Higher bid" hint on the same row */}
             <div className="mb-5 flex flex-wrap items-center gap-3">
               <Suspense>
                 <CategoryPills />
@@ -143,6 +126,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <Suspense>
                 <TimeToggle />
               </Suspense>
+              <p className="ml-auto hidden text-sm font-medium text-muted-foreground sm:block">
+                Higher bid = more visibility ·{' '}
+                <Link href="/rules" className="inline-flex items-center gap-1 text-accent hover:underline">
+                  How it works <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </p>
             </div>
 
             {/* Rows */}
@@ -174,13 +163,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 {page > 1 ? (
                   <Link
                     href={`?${new URLSearchParams({ ...(category ? { category } : {}), ...(timeframe !== 'all' ? { timeframe } : {}), page: String(page - 1) })}`}
-                    className="btn-pop rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
+                    className="btn-pop flex items-center gap-1.5 rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
                   >
-                    ← Prev
+                    <ArrowLeft className="h-3.5 w-3.5" /> Prev
                   </Link>
                 ) : (
-                  <span className="rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
-                    ← Prev
+                  <span className="flex items-center gap-1.5 rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
+                    <ArrowLeft className="h-3.5 w-3.5" /> Prev
                   </span>
                 )}
 
@@ -204,13 +193,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 {page < leaderboard.pageCount ? (
                   <Link
                     href={`?${new URLSearchParams({ ...(category ? { category } : {}), ...(timeframe !== 'all' ? { timeframe } : {}), page: String(page + 1) })}`}
-                    className="btn-pop rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
+                    className="btn-pop flex items-center gap-1.5 rounded-full border-2 border-foreground px-3 py-1.5 font-display text-sm font-bold shadow-pop-sm bg-white text-foreground hover:bg-tertiary"
                   >
-                    Next →
+                    Next <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 ) : (
-                  <span className="rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
-                    Next →
+                  <span className="flex items-center gap-1.5 rounded-full border-2 border-border px-3 py-1.5 font-display text-sm font-bold text-muted-foreground opacity-40 cursor-not-allowed select-none">
+                    Next <ArrowRight className="h-3.5 w-3.5" />
                   </span>
                 )}
               </div>
@@ -268,7 +257,7 @@ function EmptyState({ timeframe }: { timeframe: string }) {
         className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
                    bg-accent px-6 py-2.5 font-display text-sm font-bold text-white shadow-pop"
       >
-        Be the first →
+        Be the first <ArrowRight className="h-4 w-4 shrink-0" />
       </Link>
     </div>
   );

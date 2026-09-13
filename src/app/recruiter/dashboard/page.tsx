@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { getRecruiterByUserId, getOrCreateRecruiter, getRecruiterUnlocks } from '@/lib/recruiters';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { KeyRound, UserSearch, ExternalLink } from 'lucide-react';
+import { KeyRound, UserSearch, ExternalLink, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'My Unlocks — BidForHire',
@@ -39,7 +39,7 @@ export default async function RecruiterDashboardPage() {
           href="/"
           className="rounded-full border-2 border-foreground bg-card px-5 py-2.5 text-sm font-bold text-foreground shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active"
         >
-          Browse Board →
+          Browse Board <ArrowRight className="h-4 w-4 shrink-0" />
         </Link>
       </div>
 
@@ -53,7 +53,7 @@ export default async function RecruiterDashboardPage() {
             href="/"
             className="mt-5 inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent px-6 py-2.5 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5"
           >
-            Browse the leaderboard →
+            Browse the leaderboard <ArrowRight className="h-4 w-4 shrink-0" />
           </Link>
         </div>
       ) : (

@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { RecruiterSignupForm } from '@/components/RecruiterSignupForm';
-import { Building2, Unlock, CalendarCheck, Archive } from 'lucide-react';
+import { Building2, Unlock, CalendarCheck, Archive, ArrowRight } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Recruiter Sign In — BidForHire',
@@ -12,9 +13,9 @@ interface SignupPageProps {
 }
 
 const PERKS = [
-  { Icon: Unlock,        text: "Unlock any candidate's email + phone for $5" },
-  { Icon: CalendarCheck, text: 'Up to 20 unlocks per day'                     },
-  { Icon: Archive,       text: 'Access your unlocked contacts forever'         },
+  { Icon: Unlock,        text: 'First 3 unlocks are free — then $5 per candidate' },
+  { Icon: CalendarCheck, text: 'Up to 20 unlocks per day'                          },
+  { Icon: Archive,       text: 'Access your unlocked contacts forever'              },
 ];
 
 export default function RecruiterSignupPage({ searchParams }: SignupPageProps) {
@@ -22,6 +23,14 @@ export default function RecruiterSignupPage({ searchParams }: SignupPageProps) {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
+      {/* Back */}
+      <Link
+        href="/"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        ← Back to leaderboard
+      </Link>
+
       {/* Header */}
       <div className="mb-8 text-center">
         <div className="mb-3 inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent/10 px-4 py-1.5 text-sm font-bold text-accent shadow-pop-sm">
@@ -53,6 +62,14 @@ export default function RecruiterSignupPage({ searchParams }: SignupPageProps) {
           ))}
         </ul>
       </div>
+
+      {/* Already signed in? */}
+      <p className="mt-6 text-center text-sm text-muted-foreground">
+        Already signed in?{' '}
+        <Link href="/recruiter/dashboard" className="font-semibold text-accent hover:underline">
+          Go to Dashboard <ArrowRight className="inline h-3.5 w-3.5" />
+        </Link>
+      </p>
     </div>
   );
 }

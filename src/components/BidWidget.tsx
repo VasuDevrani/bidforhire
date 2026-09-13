@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { formatCents } from '@/lib/utils';
 
 interface BidWidgetProps {
@@ -29,8 +30,8 @@ export function BidWidget({ topBidCents }: BidWidgetProps) {
                      font-display text-sm font-extrabold text-foreground"
         >
           Claim #1 for ${nextBidDollars}+
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs text-tertiary">
-            →
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-tertiary">
+            <ArrowRight className="h-3.5 w-3.5" />
           </span>
         </Link>
 

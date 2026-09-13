@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowRight } from 'lucide-react';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 import { FREE_UNLOCKS_PER_RECRUITER } from '@/lib/constants';
 
@@ -131,9 +132,9 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
         </p>
         <button
           onClick={() => router.push(`/recruiter/signup?callbackUrl=/candidate/${candidateId}`)}
-          className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active"
+          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active"
         >
-          Sign In with Work Email →
+          Sign In with Work Email <ArrowRight className="h-4 w-4 shrink-0" />
         </button>
       </div>
     );
@@ -153,9 +154,9 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
         <button
           onClick={handleFreeUnlock}
           disabled={loading}
-          className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? 'Unlocking…' : 'Unlock Contact Details (Free) →'}
+          {loading ? 'Unlocking…' : <span className="flex items-center gap-2">Unlock Contact Details (Free) <ArrowRight className="h-4 w-4 shrink-0" /></span>}
         </button>
         {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
       </div>
@@ -168,12 +169,12 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
       <p className="mb-4 text-sm text-muted-foreground">
         You've used your {FREE_UNLOCKS_PER_RECRUITER} free unlocks. Pay $5 to unlock forever.
       </p>
-      <button
-        onClick={handlePaidUnlock}
-        disabled={loading}
-        className="w-full rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        {loading ? 'Opening checkout…' : 'Unlock for $5 →'}
+        <button
+          onClick={handlePaidUnlock}
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? 'Opening checkout…' : <span className="flex items-center gap-2">Unlock for $5 <ArrowRight className="h-4 w-4 shrink-0" /></span>}
       </button>
       {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
     </div>

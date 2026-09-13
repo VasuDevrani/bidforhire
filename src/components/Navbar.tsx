@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { SignOutButton } from '@/components/SignOutButton';
@@ -76,7 +77,7 @@ export async function Navbar() {
           >
             My Dashboard
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
-              →
+              <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
         ) : (
@@ -87,7 +88,7 @@ export async function Navbar() {
           >
             List Yourself
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
-              →
+              <ArrowRight className="h-3.5 w-3.5" />
             </span>
           </Link>
         )}

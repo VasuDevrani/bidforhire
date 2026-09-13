@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, ArrowRight } from 'lucide-react';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 
 interface BoostBidWidgetProps {
@@ -147,7 +147,7 @@ export function BoostBidWidget({
           disabled={loading || !isValidTopUp}
           className="btn-pop rounded-xl border-2 border-foreground bg-accent px-5 py-2.5 font-display font-bold text-white shadow-pop disabled:opacity-60"
         >
-          {loading ? 'Loading…' : 'Boost →'}
+          {loading ? 'Loading…' : <span className="flex items-center gap-1.5">Boost <ArrowRight className="h-4 w-4 shrink-0" /></span>}
         </button>
       </div>
 
