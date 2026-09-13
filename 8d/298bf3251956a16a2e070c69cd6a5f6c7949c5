@@ -1,0 +1,23 @@
+src/components/ActivityFeed.tsx
+  s_b59aa3ff98b257::t_d825334b5ef5e9 2,37,43-46
+src/components/UnlockButton.tsx
+  s_b59aa3ff98b257::t_1207bf5583273c 108-110
+src/components/LeaderboardRow.tsx
+  s_b59aa3ff98b257::t_7389f2a05137af 63,66-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8d298bf3251956a16a2e070c69cd6a5f6c7949c5",
+  "prompts": {},
+  "sessions": {
+    "s_b59aa3ff98b257": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478122",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
