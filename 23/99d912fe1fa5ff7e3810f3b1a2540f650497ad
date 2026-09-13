@@ -1,0 +1,22 @@
+src/lib/constants.ts
+  s_b59aa3ff98b257::t_43a6251999e825 8-16,24-26
+src/app/page.tsx
+  s_b59aa3ff98b257::t_ab89d89372c8d7 41
+  s_b59aa3ff98b257::t_4d73a20f4c0073 142-145
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "2399d912fe1fa5ff7e3810f3b1a2540f650497ad",
+  "prompts": {},
+  "sessions": {
+    "s_b59aa3ff98b257": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478122",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
