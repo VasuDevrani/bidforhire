@@ -1,0 +1,21 @@
+src/components/CategoryPills.tsx
+  s_b59aa3ff98b257::t_85930b03da6e7d 3-4,12,20-21,30,32-34,44
+src/components/TimeToggle.tsx
+  s_b59aa3ff98b257::t_27471206d68b88 3-4,17,25-26,32,34-36,45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8e56d052d6b0fe5b346ac68267f059d712ab6c47",
+  "prompts": {},
+  "sessions": {
+    "s_b59aa3ff98b257": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478122",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
