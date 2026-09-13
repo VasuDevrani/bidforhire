@@ -227,9 +227,9 @@ export default function RulesPage() {
 
       <div className="space-y-5">
         {sections.map(({ Icon, title, iconColor, cardBg, shadow, content }) => (
-          <section key={title} className={`rounded-2xl border-2 border-foreground ${cardBg} p-6 ${shadow}`}>
-            <div className="mb-3 flex items-center gap-3">
-              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-card ${shadow}`}>
+            <section key={title} className={`rounded-2xl border-2 border-foreground ${cardBg} p-6`}>
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-card">
                 <Icon className={`h-4 w-4 ${iconColor}`} />
               </div>
               <h2 className="font-display text-xl font-black text-foreground">{title}</h2>

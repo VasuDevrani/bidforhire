@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { getLeaderboard, getSiteStats, getRecentActivity } from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
+import { TopPodium } from '@/components/TopPodium';
 import { BidWidget } from '@/components/BidWidget';
 import { CategoryPills } from '@/components/CategoryPills';
 import { TimeToggle } from '@/components/TimeToggle';
@@ -31,11 +32,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const page = Number(searchParams.page) || 1;
   const categoryFilter = category || undefined;
 
-  const [session, leaderboard, stats, activity] = await Promise.all([
+  const [session, leaderboard, stats, activity, globalTop3] = await Promise.all([
     getServerSession(authOptions),
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
+    getLeaderboard({ page: 1, pageSize: 3 }), // always all-time top 3 for podium
   ]);
   const isRecruiter = !!session?.user;
 
@@ -51,7 +53,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       />
 
       {/* ── Hero Banner (compact) ─────────────────────────────────────────────────── */}
-      <section className="border-b-2 border-border px-4 py-5 dot-grid">
+      <section className="border-b-2 border-border px-4 py-5">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Left: eyebrow + headline + tagline */}
@@ -79,9 +81,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <span>
                   <span className="font-display font-extrabold text-accent">{stats.totalCandidates}</span>{' '}candidates
                 </span>
-                <span>
-                  <span className="font-display font-extrabold text-accent">{stats.totalUnlocks}</span>{' '}unlocks
-                </span>
+                {stats.totalUnlocks >= 5 && (
+                  <span>
+                    <span className="font-display font-extrabold text-accent">{stats.totalUnlocks}</span>{' '}unlocks
+                  </span>
+                )}
               </div>
               <Link
                 href="/submit"
@@ -145,6 +149,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             {leaderboard.candidates.length === 0 ? (
               <EmptyState timeframe={timeframe} />
             ) : (
+              <>
+                {/* Chibi podium — always shows global top 3 on page 1 */}
+                {page === 1 && globalTop3.candidates.length >= 3 && (
+                  <TopPodium top3={globalTop3.candidates.slice(0, 3)} />
+                )}
+
               <div className="space-y-4">
                 {leaderboard.candidates.map((c, i) => (
                   <LeaderboardRow
@@ -154,6 +164,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   />
                 ))}
               </div>
+              </>
             )}
 
             {/* Pagination */}

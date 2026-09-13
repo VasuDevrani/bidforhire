@@ -29,8 +29,8 @@ export function CategoryPills() {
           <button
             key={cat}
             onClick={() => setCategory(slug)}
-            className={`btn-pop shrink-0 rounded-full border-2 border-foreground
-                        px-4 py-1.5 font-display text-sm font-bold shadow-pop-sm
+            className={`shrink-0 rounded-full border-2 border-foreground
+                        px-4 py-1.5 font-display text-sm font-bold
                         transition-all duration-200
                         ${active
                           ? 'bg-accent text-white'

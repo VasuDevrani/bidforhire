@@ -26,7 +26,7 @@ export function TimeToggle() {
   }
 
   return (
-    <div className="flex overflow-hidden rounded-full border-2 border-foreground bg-white shadow-pop-sm">
+    <div className="flex overflow-hidden rounded-full border-2 border-foreground bg-white">
       {OPTIONS.map((opt) => (
         <button
           key={opt.value}

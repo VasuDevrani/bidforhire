@@ -14,7 +14,7 @@ export function StatsBar({ totalCandidates, totalUnlocks, totalRevenueCents }: S
   const items = [
     `${formatCents(totalRevenueCents)} paid out`,
     `${totalCandidates} active candidates`,
-    `${totalUnlocks} contact unlocks`,
+    ...(totalUnlocks >= 5 ? [`${totalUnlocks} contact unlocks`] : []),
     `higher bid = more visibility`,
     `pay once · stay listed forever`,
     `real bids. real visibility.`,

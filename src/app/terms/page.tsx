@@ -150,10 +150,10 @@ export default function TermsPage() {
           return (
             <div
               key={s.title}
-              className={`rounded-2xl border-2 border-foreground ${s.bg} p-5 ${s.shadow}`}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-card ${s.shadow}`}>
+                  className={`rounded-2xl border-2 border-foreground ${s.bg} p-5`}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-foreground bg-card">
                   <Icon className={`h-4 w-4 ${s.color}`} />
                 </div>
                 <h2 className="font-display text-lg font-black text-foreground">{s.title}</h2>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Crown } from 'lucide-react';
 import { SkillChip } from './SkillChip';
 import { formatCents } from '@/lib/utils';
 import type { PublicCandidate } from '@/lib/candidates';
@@ -8,14 +9,12 @@ interface LeaderboardRowProps {
   position: number;
 }
 
-/* Rotating shadow colours for a "confetti" feel */
-const CARD_SHADOWS = [
-  'shadow-pop-violet',
-  'shadow-pop-pink',
-  'shadow-pop-amber',
-  'shadow-pop-emerald',
-  'shadow-pop-violet',
-];
+/* Coloured shadows only for the top 3 */
+const TOP3_SHADOWS: Record<number, string> = {
+  1: 'shadow-pop-violet',
+  2: 'shadow-pop-pink',
+  3: 'shadow-pop-amber',
+};
 
 /* Rank badge colour per position */
 const BADGE_COLORS = [
@@ -27,7 +26,7 @@ const BADGE_COLORS = [
 
 export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
   const rank = position;
-  const shadow = CARD_SHADOWS[(rank - 1) % CARD_SHADOWS.length];
+  const shadow = TOP3_SHADOWS[rank] ?? '';
   const badgeColor = BADGE_COLORS[(rank - 1) % BADGE_COLORS.length];
 
   return (
@@ -43,7 +42,7 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
         >
           #{rank}
         </span>
-        {rank === 1 && <span className="animate-float text-lg">👑</span>}
+        {rank === 1 && <Crown className="h-5 w-5 text-accent" />}
       </div>
 
       {/* Info */}
@@ -70,9 +69,16 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
         <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{candidate.summary}</p>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span>{candidate.profileViews} views</span>
-          <span>·</span>
-          <span>{candidate.unlockCount} recruiters interested</span>
+          {/* Always show at least 1 view */}
+          <span>{Math.max(candidate.profileViews, 1)} views</span>
+          {/* Only show recruiter interest when ≥ 1 */}
+          {candidate.unlockCount >= 1 && (
+            <>
+              <span>·</span>
+              <span>{candidate.unlockCount} recruiter{candidate.unlockCount !== 1 ? 's' : ''} interested</span>
+            </>
+          )}
+          {/* Only show unlock count when ≥ 5 */}
           {candidate.daysListed > 0 && (
             <>
               <span>·</span>
@@ -91,11 +97,11 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
           <div className="text-xs text-muted-foreground">current bid</div>
         </div>
 
-        <Link
-          href={`/submit?minBid=${Math.floor(candidate.currentBid / 100) + 1}`}
-          className="btn-pop rounded-full border-2 border-foreground bg-foreground
-                     px-3 py-1.5 font-display text-xs font-bold text-white
-                     shadow-pop-sm transition-all"
+          <Link
+            href={`/submit?minBid=${Math.floor(candidate.currentBid / 100) + 1}`}
+            className="rounded-full border-2 border-foreground bg-foreground
+                       px-3 py-1.5 font-display text-xs font-bold text-white
+                       transition-all"
         >
           Outbid #{rank} →
         </Link>
