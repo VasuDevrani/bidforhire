@@ -65,12 +65,14 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
   const isAuthenticated = !!session?.user;
   let contactInfo: { email: string; phone: string | null } | null = null;
   let freeUnlocksRemaining = 0;
+  let hasLifetimeAccess = false;
 
   if (userId) {
     const recruiter = await getRecruiterByUserId(userId);
     if (recruiter) {
+      hasLifetimeAccess = recruiter.hasLifetimeAccess;
       contactInfo = await getCandidateContactInfo(params.id, recruiter.id);
-      if (!contactInfo) {
+      if (!contactInfo && !hasLifetimeAccess) {
         const used = await prisma.unlock.count({ where: { recruiterId: recruiter.id } });
         freeUnlocksRemaining = Math.max(0, FREE_UNLOCKS_PER_RECRUITER - used);
       }
@@ -182,6 +184,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               candidateId={params.id}
               isAuthenticated={isAuthenticated}
               freeUnlocksRemaining={freeUnlocksRemaining}
+              hasLifetimeAccess={hasLifetimeAccess}
             />
           </div>
         )}

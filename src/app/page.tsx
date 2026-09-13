@@ -55,7 +55,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="flex flex-wrap items-center justify-between gap-4">
             {/* Left: eyebrow + headline + tagline */}
             <div>
-              <div className="mb-1.5 inline-flex items-center gap-2 rounded-full border-foreground
+              <div className="mb-1.5 inline-flex items-center gap-2 rounded-full border-black-1 border-foreground
                               bg-white px-2.5 py-0.5">
                 <span className="live-dot h-2 w-2 rounded-full bg-quaternary" />
                 <span className="font-display text-xs font-bold uppercase tracking-widest text-foreground">

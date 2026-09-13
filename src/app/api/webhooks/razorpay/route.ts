@@ -133,7 +133,38 @@ export async function POST(req: NextRequest) {
           data: { peakRank: updated.rank },
         });
       }
+    } else if (type === 'lifetime_access') {
+      if (!recruiterId) {
+        console.warn('[webhook/razorpay] lifetime_access: missing recruiterId');
+        return NextResponse.json({ received: true });
+      }
+
+      await prisma.$transaction(async (tx) => {
+        // Grant lifetime access
+        await tx.recruiter.update({
+          where: { id: recruiterId },
+          data: { hasLifetimeAccess: true },
+        });
+
+        // Unlock the specific candidate included in the order notes
+        if (candidateId) {
+          const existing = await tx.unlock.findUnique({
+            where: { recruiterId_candidateId: { recruiterId, candidateId } },
+          });
+          if (!existing) {
+            await tx.unlock.create({
+              data: { recruiterId, candidateId, paymentId },
+            });
+            await tx.candidate.update({
+              where: { id: candidateId },
+              data: { unlockCount: { increment: 1 } },
+            });
+          }
+        }
+      });
+
     } else if (type === 'unlock') {
+      // Legacy per-unlock payment — kept for in-flight orders only
       if (!recruiterId) {
         console.warn('[webhook/razorpay] unlock: missing recruiterId');
         return NextResponse.json({ received: true });

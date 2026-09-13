@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { getRecruiterByUserId, getOrCreateRecruiter, getRecruiterUnlocks } from '@/lib/recruiters';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { KeyRound, UserSearch, ExternalLink, ArrowRight } from 'lucide-react';
+import { KeyRound, UserSearch, ExternalLink, ArrowRight, Infinity } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'My Unlocks — BidForHire',
@@ -25,9 +25,21 @@ export default async function RecruiterDashboardPage() {
       {/* Header */}
       <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <div className="mb-2 inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-accent/10 px-3 py-1 text-xs font-bold text-accent shadow-pop-sm">
-            <KeyRound className="h-3.5 w-3.5" />
-            Recruiter Dashboard
+          <div className="mb-2 flex items-center gap-2 flex-wrap">
+            <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-accent/10 px-3 py-1 text-xs font-bold text-accent shadow-pop-sm">
+              <KeyRound className="h-3.5 w-3.5" />
+              Recruiter Dashboard
+            </div>
+            {recruiter.hasLifetimeAccess ? (
+              <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-accent px-3 py-1 text-xs font-bold text-white shadow-pop-sm">
+                <Infinity className="h-3.5 w-3.5" />
+                Lifetime Member
+              </div>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-amber-100 dark:bg-amber-950/50 px-3 py-1 text-xs font-bold text-amber-800 dark:text-amber-200 shadow-pop-sm">
+                {Math.max(0, 3 - total)} of 3 Free Unlocks Remaining
+              </div>
+            )}
           </div>
           <h1 className="font-display text-3xl font-black text-foreground">My Unlocked Candidates</h1>
           <p className="mt-1 text-sm text-muted-foreground">

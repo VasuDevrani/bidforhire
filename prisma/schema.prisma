@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ─── NextAuth Models ──────────────────────────────────────────
@@ -113,12 +114,13 @@ model Bid {
 }
 
 model Recruiter {
-  id          String   @id @default(cuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  email       String   @unique
-  companyName String?
-  createdAt   DateTime @default(now())
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email             String   @unique
+  companyName       String?
+  hasLifetimeAccess Boolean  @default(false) // true after paying the one-time $10 fee
+  createdAt         DateTime @default(now())
 
   unlocks Unlock[]
 }

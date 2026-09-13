@@ -4,19 +4,20 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { getRazorpayClient } from '@/lib/razorpay';
 import { getCountryCode, getCurrencyForCountry, usdCentsToRazorpay } from '@/lib/currency';
-import { checkUnlockRateLimit, hasAlreadyUnlocked, getRecruiterByUserId } from '@/lib/recruiters';
-import { UNLOCK_PRICE_CENTS } from '@/lib/constants';
+import { getRecruiterByUserId } from '@/lib/recruiters';
+import { LIFETIME_ACCESS_PRICE_CENTS } from '@/lib/constants';
 
 /**
  * POST /api/checkout/unlock
  *
  * Body: { candidateId: string }
  *
- * Requires recruiter to be authenticated.
- * Creates a Razorpay order for the contact unlock fee.
+ * Creates a Razorpay order for the one-time $10 lifetime access fee.
+ * After payment is verified, the recruiter gains unlimited unlocks
+ * (subject to the 20/day rate limit) and the specified candidate is
+ * unlocked immediately.
  *
- * Response:
- *   { orderId, amount, currency, keyId, candidateId }
+ * 409 — recruiter already has lifetime access
  */
 export async function POST(req: NextRequest) {
   try {
@@ -38,6 +39,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Already a lifetime member — no need to pay again
+    if (recruiter.hasLifetimeAccess) {
+      return NextResponse.json({ error: 'Already has lifetime access' }, { status: 409 });
+    }
+
     const { candidateId } = await req.json();
     if (!candidateId) {
       return NextResponse.json({ error: 'candidateId is required' }, { status: 400 });
@@ -52,33 +58,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Candidate not found' }, { status: 404 });
     }
 
-    // Check if already unlocked
-    if (await hasAlreadyUnlocked(recruiter.id, candidateId)) {
-      return NextResponse.json({ error: 'Already unlocked' }, { status: 409 });
-    }
-
-    // Rate limit: max 20 unlocks/day
-    if (!(await checkUnlockRateLimit(recruiter.id))) {
-      return NextResponse.json(
-        { error: 'Daily unlock limit reached (20/day)' },
-        { status: 429 }
-      );
-    }
-
-    // Convert USD cents to the user's local currency for the Razorpay order.
+    // Convert $10 USD to the recruiter's local currency for Razorpay
     const userCurrency = getCurrencyForCountry(getCountryCode(req.headers));
-    const { amount: rzpAmount, currency: rzpCurrency } = await usdCentsToRazorpay(UNLOCK_PRICE_CENTS, userCurrency);
+    const { amount: rzpAmount, currency: rzpCurrency } = await usdCentsToRazorpay(
+      LIFETIME_ACCESS_PRICE_CENTS,
+      userCurrency
+    );
 
     const razorpay = getRazorpayClient();
     const order = await razorpay.orders.create({
       amount: rzpAmount,
       currency: rzpCurrency,
-      receipt: `unlock_${candidateId.slice(0, 28)}`,
+      receipt: `lifetime_${recruiter.id.slice(0, 24)}`,
       notes: {
-        type: 'unlock',
+        type: 'lifetime_access',
         candidateId,
         recruiterId: recruiter.id,
-        usdCents: String(UNLOCK_PRICE_CENTS),
+        usdCents: String(LIFETIME_ACCESS_PRICE_CENTS),
       },
     });
 

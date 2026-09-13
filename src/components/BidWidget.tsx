@@ -54,24 +54,24 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
 
   return (
     <div className="relative">
-      <div className="rounded-2xl border-2 border-foreground bg-card p-5 pt-7">
+      <div className="rounded-2xl border-2 border-foreground bg-card p-4 pt-7">
       <div className="relative">
         {/* Current leader row */}
-        <div className="mb-3 flex items-baseline gap-2">
+        {/* <div className="mb-3 flex items-baseline gap-2">
           <span className="font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
             Current Leader
           </span>
           <span className="font-display text-2xl font-extrabold text-accent leading-none">
             {formatCents(topBidCents)}
           </span>
-        </div>
+        </div> */}
 
-        <p className="mb-5 text-sm font-medium leading-relaxed text-muted-foreground">
+        {/* <p className="mb-5 text-sm font-medium leading-relaxed text-muted-foreground">
           Outbid #1 to be the first candidate recruiters see.
-        </p>
+        </p> */}
 
         {/* Stepper control: Claim #[rank] for [-] $[amount] [+] */}
-        <div className="mb-4 rounded-xl border-2 border-foreground bg-background p-3">
+        <div className="mb-4 rounded-xl border-foreground bg-background p-3">
           <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
             <span>Projected Rank</span>
             <span

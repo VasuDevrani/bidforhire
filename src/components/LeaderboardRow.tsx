@@ -85,12 +85,12 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
             </>
           )}
           {/* Only show unlock count when ≥ 5 */}
-          {candidate.daysListed > 0 && (
+          {/* {candidate.daysListed > 0 && (
             <>
               <span>·</span>
               <span>{candidate.daysListed}d listed</span>
             </>
-          )}
+          )} */}
         </div>
       </div>
 

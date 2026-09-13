@@ -133,6 +133,38 @@ export async function POST(req: NextRequest) {
       await updateCandidateRanks();
 
     // ── Process unlock ────────────────────────────────────────────────────
+    // ── Process lifetime access purchase ─────────────────────────────────────
+    } else if (type === 'lifetime_access') {
+      if (!recruiterId) {
+        console.warn('[checkout/verify] lifetime_access: missing recruiterId in order notes');
+        return NextResponse.json({ error: 'Missing recruiterId in order' }, { status: 400 });
+      }
+
+      await prisma.$transaction(async (tx) => {
+        // Grant lifetime access (idempotent update)
+        await tx.recruiter.update({
+          where: { id: recruiterId },
+          data: { hasLifetimeAccess: true },
+        });
+
+        // Also immediately unlock the specific candidate they were purchasing for
+        if (candidateId) {
+          const existing = await tx.unlock.findUnique({
+            where: { recruiterId_candidateId: { recruiterId, candidateId } },
+          });
+          if (!existing) {
+            await tx.unlock.create({
+              data: { recruiterId, candidateId, paymentId: razorpay_payment_id },
+            });
+            await tx.candidate.update({
+              where: { id: candidateId },
+              data: { unlockCount: { increment: 1 } },
+            });
+          }
+        }
+      });
+
+    // ── Legacy per-unlock payment (kept for in-flight orders) ────────────────
     } else if (type === 'unlock') {
       if (!recruiterId) {
         console.warn('[checkout/verify] unlock: missing recruiterId in order notes');

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Infinity } from 'lucide-react';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 import { FREE_UNLOCKS_PER_RECRUITER } from '@/lib/constants';
 
@@ -11,14 +11,21 @@ interface UnlockButtonProps {
   isAuthenticated: boolean;
   /** How many free unlocks this recruiter still has. 0 when unauthenticated or quota exhausted. */
   freeUnlocksRemaining: number;
+  /** True if the recruiter has already paid the $10 lifetime access fee. */
+  hasLifetimeAccess: boolean;
 }
 
-export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemaining }: UnlockButtonProps) {
+export function UnlockButton({
+  candidateId,
+  isAuthenticated,
+  freeUnlocksRemaining,
+  hasLifetimeAccess,
+}: UnlockButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // ── Free unlock (no payment needed) ────────────────────────────────────────
+  // ── Free unlock (no payment) ─────────────────────────────────────────────
   async function handleFreeUnlock() {
     setLoading(true);
     setError('');
@@ -31,7 +38,6 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
       const data = await res.json();
 
       if (res.status === 409) {
-        // Already unlocked — refresh so the contact info appears
         router.refresh();
         return;
       }
@@ -40,7 +46,6 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
         setLoading(false);
         return;
       }
-      // Unlock created — refresh the server component to reveal contact info
       router.refresh();
     } catch {
       setError('Network error — please try again');
@@ -48,8 +53,42 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
     }
   }
 
-  // ── Paid unlock via Razorpay ────────────────────────────────────────────────
-  async function handlePaidUnlock() {
+  // ── Lifetime-access unlock (no payment, rate-limited) ────────────────────
+  async function handleLifetimeUnlock() {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/recruiter/unlock-lifetime', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidateId }),
+      });
+      const data = await res.json();
+
+      if (res.status === 409) {
+        // Already unlocked — just refresh to reveal contact info
+        router.refresh();
+        return;
+      }
+      if (res.status === 429) {
+        setError('Daily limit reached (20 unlocks/day). Try again tomorrow.');
+        setLoading(false);
+        return;
+      }
+      if (!res.ok) {
+        setError(data.error || 'Something went wrong');
+        setLoading(false);
+        return;
+      }
+      router.refresh();
+    } catch {
+      setError('Network error — please try again');
+      setLoading(false);
+    }
+  }
+
+  // ── $10 lifetime-access checkout via Razorpay ────────────────────────────
+  async function handleLifetimeCheckout() {
     setLoading(true);
     setError('');
     try {
@@ -61,8 +100,8 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
       const data = await res.json();
 
       if (res.status === 409) {
-        setError("You've already unlocked this candidate.");
-        setLoading(false);
+        // Already has lifetime access — refresh to show contact info
+        router.refresh();
         return;
       }
       if (!res.ok) {
@@ -83,7 +122,7 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
         amount: data.amount,
         currency: data.currency,
         name: 'BidForHire',
-        description: 'Unlock candidate contact details',
+        description: 'Lifetime access — unlock any candidate, forever',
         order_id: data.orderId,
         theme: { color: '#6366f1' },
         modal: {
@@ -106,8 +145,6 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
               setLoading(false);
               return;
             }
-            // Refresh the current page — server component re-runs getCandidateContactInfo
-            // which will now find the Unlock record and reveal contact details inline.
             router.refresh();
           } catch {
             setError('Verification failed — if you were charged, contact support.');
@@ -123,7 +160,7 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
     }
   }
 
-  // ── Unauthenticated visitor ─────────────────────────────────────────────────
+  // ── Unauthenticated visitor ──────────────────────────────────────────────
   if (!isAuthenticated) {
     return (
       <div>
@@ -140,7 +177,31 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
     );
   }
 
-  // ── Authenticated with free credits remaining ───────────────────────────────
+  // ── Lifetime member — no payment needed ─────────────────────────────────
+  if (hasLifetimeAccess) {
+    return (
+      <div>
+        <p className="mb-4 flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+          <Infinity className="h-4 w-4 text-accent shrink-0" />
+          Lifetime access · up to 20 unlocks/day
+        </p>
+        <button
+          onClick={handleLifetimeUnlock}
+          disabled={loading}
+          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? 'Unlocking…' : (
+            <span className="flex items-center gap-2">
+              Unlock Contact Details <ArrowRight className="h-4 w-4 shrink-0" />
+            </span>
+          )}
+        </button>
+        {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
+      </div>
+    );
+  }
+
+  // ── Free credits remaining ───────────────────────────────────────────────
   if (freeUnlocksRemaining > 0) {
     return (
       <div>
@@ -156,25 +217,38 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
           disabled={loading}
           className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {loading ? 'Unlocking…' : <span className="flex items-center gap-2">Unlock Contact Details (Free) <ArrowRight className="h-4 w-4 shrink-0" /></span>}
+          {loading ? 'Unlocking…' : (
+            <span className="flex items-center gap-2">
+              Unlock Contact Details (Free) <ArrowRight className="h-4 w-4 shrink-0" />
+            </span>
+          )}
         </button>
         {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
       </div>
     );
   }
 
-  // ── Authenticated, free quota exhausted → paid flow ─────────────────────────
+  // ── Free quota exhausted — prompt lifetime access purchase ───────────────
   return (
     <div>
-      <p className="mb-4 text-sm text-muted-foreground">
-        You've used your {FREE_UNLOCKS_PER_RECRUITER} free unlocks. Pay $5 to unlock forever.
+      <p className="mb-1 text-sm font-medium text-foreground">
+        You&apos;ve used all {FREE_UNLOCKS_PER_RECRUITER} free unlocks.
       </p>
-        <button
-          onClick={handlePaidUnlock}
-          disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? 'Opening checkout…' : <span className="flex items-center gap-2">Unlock for $5 <ArrowRight className="h-4 w-4 shrink-0" /></span>}
+      <p className="mb-4 text-sm text-muted-foreground">
+        Get <span className="font-semibold text-foreground">lifetime access</span> for a one-time
+        fee of <span className="font-semibold text-accent">$10</span> — then unlock any candidate
+        for free (up to 20/day), forever.
+      </p>
+      <button
+        onClick={handleLifetimeCheckout}
+        disabled={loading}
+        className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:shadow-pop-hover hover:-translate-y-0.5 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {loading ? 'Opening checkout…' : (
+          <span className="flex items-center gap-2">
+            Get Lifetime Access — $10 <ArrowRight className="h-4 w-4 shrink-0" />
+          </span>
+        )}
       </button>
       {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
     </div>
