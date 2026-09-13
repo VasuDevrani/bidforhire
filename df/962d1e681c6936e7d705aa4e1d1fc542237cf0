@@ -1,0 +1,21 @@
+src/app/recruiter/dashboard/page.tsx
+  s_ebe05af1da25f2::t_42f5b7e1916cf6 4,7,25-36,38-52,54-59,63,78-80,83-87,90-93,96,100,102-103,107-118,120-126,129-142
+src/components/Navbar.tsx
+  s_ebe05af1da25f2::t_ca299ffcf06f28 57
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "df962d1e681c6936e7d705aa4e1d1fc542237cf0",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
