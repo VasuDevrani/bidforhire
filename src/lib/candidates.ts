@@ -219,3 +219,12 @@ export async function getRecentActivity(limit = 10) {
 
   return activities;
 }
+
+export async function getAllActiveBids(): Promise<number[]> {
+  const candidates = await prisma.candidate.findMany({
+    where: { status: 'active' },
+    select: { currentBid: true },
+    orderBy: [{ currentBid: 'desc' }, { createdAt: 'asc' }],
+  });
+  return candidates.map((c) => c.currentBid);
+}

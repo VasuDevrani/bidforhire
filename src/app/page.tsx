@@ -2,13 +2,12 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { getLeaderboard, getSiteStats, getRecentActivity } from '@/lib/candidates';
+import { getLeaderboard, getSiteStats, getRecentActivity, getAllActiveBids } from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
 import { TopPodium } from '@/components/TopPodium';
 import { BidWidget } from '@/components/BidWidget';
 import { CategoryPills } from '@/components/CategoryPills';
 import { TimeToggle } from '@/components/TimeToggle';
-import { StatsBar } from '@/components/StatsBar';
 import { ActivityFeed } from '@/components/ActivityFeed';
 import Link from 'next/link';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
@@ -33,27 +32,22 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const page = Number(searchParams.page) || 1;
   const categoryFilter = category || undefined;
 
-  const [session, leaderboard, stats, activity, globalTop3] = await Promise.all([
+  const [session, leaderboard, stats, activity, globalTop3, allBids] = await Promise.all([
     getServerSession(authOptions),
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
     getLeaderboard({ category: categoryFilter, timeframe, page: 1, pageSize: 3 }), // top 3 for current filters
+    getAllActiveBids(), // all active bid amounts for rank prediction in BidWidget
   ]);
   const isRecruiter = !!session?.user;
 
-  const topBid = leaderboard.candidates[0]?.currentBid ?? 100;
+  // Use global #1 bid (not filter-specific) so the widget always reflects the real top
+  const topBid = allBids[0] ?? 100;
 
   return (
     <>
-      {/* ── Marquee Stats Band ─────────────────────────────────── */}
-      <StatsBar
-        totalCandidates={stats.totalCandidates}
-        totalUnlocks={stats.totalUnlocks}
-        totalRevenueCents={stats.totalRevenueCents}
-      />
-
-      {/* ── Hero Banner (compact) ─────────────────────────────────────────────────── */}
+      {/* ── Hero Banner (compact) ──────────────────────────────────────────────────────────────── */}
       <section className="border-b-2 border-border px-4 py-5">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -76,8 +70,32 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </p>
             </div>
 
-            {/* Right: mini stats + CTAs */}
-            <div className="flex flex-wrap items-center gap-3">
+            {/* Right: CTAs (always on one row) + stats (below on mobile, inline on sm+) */}
+            <div className="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+              {/* Buttons row — never wraps internally */}
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/submit"
+                  className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
+                             bg-accent px-5 py-2 font-display text-sm font-bold text-white shadow-pop"
+                >
+                  List Yourself
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                </Link>
+                {!isRecruiter && (
+                  <Link
+                    href="/recruiter/signup"
+                    className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
+                               bg-transparent px-5 py-2 font-display text-sm font-bold
+                               text-foreground hover:bg-tertiary"
+                  >
+                    I&apos;m Hiring
+                  </Link>
+                )}
+              </div>
+              {/* Stats — below buttons on mobile, inline on sm+ */}
               <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
                 <span>
                   <span className="font-display font-extrabold text-accent">{stats.totalCandidates}</span>{' '}candidates
@@ -88,26 +106,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </span>
                 )}
               </div>
-              <Link
-                href="/submit"
-                className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
-                           bg-accent px-5 py-2 font-display text-sm font-bold text-white shadow-pop"
-              >
-                List Yourself
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-              {!isRecruiter && (
-                <Link
-                  href="/recruiter/signup"
-                  className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
-                             bg-transparent px-5 py-2 font-display text-sm font-bold
-                             text-foreground hover:bg-tertiary"
-                >
-                  I&apos;m Hiring
-                </Link>
-              )}
             </div>
           </div>
         </div>
@@ -209,7 +207,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           {/* Right sidebar */}
           <aside className="w-full lg:w-72 lg:shrink-0">
             <div className="space-y-5">
-              <BidWidget topBidCents={topBid} />
+              <BidWidget topBidCents={topBid} allBidsCents={allBids} />
 
               {/* Activity feed */}
               <div className="rounded-xl border-2 border-border bg-card p-4 shadow-pop-sm">
