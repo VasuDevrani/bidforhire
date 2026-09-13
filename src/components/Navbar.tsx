@@ -54,15 +54,9 @@ export async function Navbar() {
             FAQ
           </Link>
 
-          {/* Signed-in recruiter: show truncated email + sign-out */}
+          {/* Signed-in recruiter: sign-out only */}
           {isRecruiter && (
             <div className="flex items-center gap-3 border-l-2 border-border pl-4">
-              <span
-                className="max-w-[120px] truncate text-xs font-medium text-muted-foreground"
-                title={recruiterEmail}
-              >
-                {recruiterEmail}
-              </span>
               <SignOutButton />
             </div>
           )}
