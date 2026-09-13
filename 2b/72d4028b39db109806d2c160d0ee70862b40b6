@@ -1,0 +1,30 @@
+src/app/candidate/[id]/page.tsx
+  s_ebe05af1da25f2::t_431502466fc1b2 17,94
+  s_ebe05af1da25f2::t_9b8f7f4742ae5f 160,196
+src/app/submit/page.tsx
+  s_ebe05af1da25f2::t_e7e0a1898ae5e4 3,35
+src/app/recruiter/signup/page.tsx
+  s_ebe05af1da25f2::t_9eb9b48f50a61b 3,30
+src/components/TimeToggle.tsx
+  s_ebe05af1da25f2::t_ec75b5d7419857 40-41
+src/components/BoostBidWidget.tsx
+  s_ebe05af1da25f2::t_fe63854af2b9c3 117
+src/app/role/[roleSlug]/page.tsx
+  s_ebe05af1da25f2::t_5e29a1524b4e54 6,39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "2b72d4028b39db109806d2c160d0ee70862b40b6",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
