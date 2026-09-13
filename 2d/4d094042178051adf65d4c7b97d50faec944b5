@@ -1,0 +1,50 @@
+src/app/recruiter/verify/page.tsx
+  s_b59aa3ff98b257::t_3570f8a577989e 3,21
+src/components/UnlockButton.tsx
+  s_b59aa3ff98b257::t_7ca2d87bcdbbf7 5,135,137,157,159,172-177
+src/components/LeaderboardRow.tsx
+  s_b59aa3ff98b257::t_8abf3c258aa686 2,19-20,25,31,108-109,111-113
+  s_b59aa3ff98b257::t_fe6fefeab49890 21-24,26
+src/app/role/[roleSlug]/page.tsx
+  s_b59aa3ff98b257::t_9e41983ce372d9 7,55
+src/components/BoostBidWidget.tsx
+  s_b59aa3ff98b257::t_7882963c4b372b 4,150
+src/app/page.tsx
+  s_b59aa3ff98b257::t_53d28f5bd9e7b2 14
+  s_b59aa3ff98b257::t_e6a374d89d9195 116-117,121,129-134
+  s_b59aa3ff98b257::t_d3ba0f17566a29 166,168,171-172,196,198,201-202,260
+  s_b59aa3ff98b257::t_d3a4abdec6a382 97-98
+src/components/Navbar.tsx
+  s_b59aa3ff98b257::t_d58caa856e3f36 2,80,91
+src/app/recruiter/signup/page.tsx
+  s_b59aa3ff98b257::t_69b2f3bbb1689f 1,16-18,26-33,65-69,71-72
+  s_b59aa3ff98b257::t_c0f5c2cceaac14 4
+  s_b59aa3ff98b257::t_34db99ce5014a0 70
+src/components/SubmitForm.tsx
+  s_b59aa3ff98b257::t_a46ec04d571ed6 4,289,291
+src/components/BidWidget.tsx
+  s_b59aa3ff98b257::t_c69452f7aab83d 2,33-34
+src/app/submit/page.tsx
+  s_b59aa3ff98b257::t_050c696c5b7565 1,5-6,17,20-27,30-37,58-75
+src/app/recruiter/dashboard/page.tsx
+  s_b59aa3ff98b257::t_2ff32a06dabea3 7,42,56
+src/components/RecruiterSignupForm.tsx
+  s_b59aa3ff98b257::t_6e2874a19570f7 6
+  s_b59aa3ff98b257::t_100a964af06963 109,111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "2d4d094042178051adf65d4c7b97d50faec944b5",
+  "prompts": {},
+  "sessions": {
+    "s_b59aa3ff98b257": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478122",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
