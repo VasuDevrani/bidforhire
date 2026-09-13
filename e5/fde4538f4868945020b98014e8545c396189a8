@@ -1,0 +1,23 @@
+src/components/BidWidget.tsx
+  s_a4d27b1f1d9092::t_94ebe4f47681f4 65
+  s_a4d27b1f1d9092::t_e5128deb447fdf 5,10,13-52,84-116
+src/app/page.tsx
+  s_a4d27b1f1d9092::t_3c7fad34061ed9 73-98
+  s_a4d27b1f1d9092::t_d7eac5c9ca2e7c 5,35,41,45-46,50,210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "e5fde4538f4868945020b98014e8545c396189a8",
+  "prompts": {},
+  "sessions": {
+    "s_a4d27b1f1d9092": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478124",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
