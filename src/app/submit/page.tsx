@@ -26,7 +26,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
   const nextBidDollars = Math.floor(topBidCents / 100) + 1;
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-12">
+    <div className="mx-auto max-w-xl px-4 pb-12 pt-4">
       {/* Back */}
       <Link
         href="/"

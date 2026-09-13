@@ -53,7 +53,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
   }
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop-violet">
+    <div className="rounded-2xl border-2 border-foreground bg-card p-5">
       <div className="relative">
         <div className="mb-0.5 font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
           Current #1 Bid
@@ -67,13 +67,13 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
         </p>
 
         {/* Stepper control: Claim #[rank] for [-] $[amount] [+] */}
-        <div className="mb-4 rounded-xl border-2 border-foreground bg-background p-3 shadow-pop-sm">
+        <div className="mb-4 rounded-xl border-2 border-foreground bg-background p-3">
           <div className="mb-2 flex items-center justify-between text-xs font-bold uppercase tracking-wider text-muted-foreground">
             <span>Projected Rank</span>
             <span
               className={`rounded-full px-2.5 py-0.5 text-xs font-extrabold text-white ${
                 predictedRank === 1
-                  ? 'bg-accent shadow-pop-sm'
+                  ? 'bg-accent'
                   : predictedRank === 2
                   ? 'bg-secondary'
                   : predictedRank === 3
@@ -96,7 +96,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
               onClick={handleDecrement}
               disabled={bidDollars <= 1}
               aria-label="Decrease bid"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-foreground bg-white font-extrabold text-foreground shadow-pop-sm transition-all hover:bg-tertiary active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-foreground bg-white font-extrabold text-foreground transition-all hover:bg-tertiary active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Minus className="h-4 w-4 stroke-[3]" />
             </button>
@@ -114,7 +114,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
                 value={bidInput}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
-                className="w-full rounded-xl border-2 border-foreground bg-white py-2 pl-7 pr-2 text-center font-display text-lg font-black text-foreground outline-none transition-all focus:border-accent focus:shadow-pop-sm"
+                className="w-full rounded-xl border-2 border-foreground bg-white py-2 pl-7 pr-2 text-center font-display text-lg font-black text-foreground outline-none transition-all focus:border-accent"
               />
             </div>
 
@@ -123,7 +123,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
               type="button"
               onClick={handleIncrement}
               aria-label="Increase bid"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-foreground bg-white font-extrabold text-foreground shadow-pop-sm transition-all hover:bg-tertiary active:translate-y-0.5"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border-2 border-foreground bg-white font-extrabold text-foreground transition-all hover:bg-tertiary active:translate-y-0.5"
             >
               <Plus className="h-4 w-4 stroke-[3]" />
             </button>
@@ -135,7 +135,7 @@ export function BidWidget({ topBidCents, allBidsCents = [] }: BidWidgetProps) {
           href={`/submit?minBid=${bidDollars}`}
           className="btn-pop flex w-full items-center justify-center gap-2 rounded-full
                      border-2 border-foreground bg-tertiary px-4 py-3
-                     font-display text-sm font-black text-foreground shadow-pop transition-all hover:-translate-y-0.5 active:translate-y-0"
+                     font-display text-sm font-black text-foreground transition-all hover:-translate-y-0.5 active:translate-y-0"
         >
           <span>
             Claim #{predictedRank} for ${bidDollars}

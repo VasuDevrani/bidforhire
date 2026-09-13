@@ -22,7 +22,7 @@ export default function RecruiterSignupPage({ searchParams }: SignupPageProps) {
   const callbackUrl = searchParams.callbackUrl ?? searchParams.next ?? '/recruiter/dashboard';
 
   return (
-    <div className="mx-auto max-w-md px-4 py-16">
+    <div className="mx-auto max-w-md px-4 pb-16 pt-4">
       {/* Back */}
       <Link
         href="/"

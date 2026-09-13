@@ -9,6 +9,7 @@ import { BidWidget } from '@/components/BidWidget';
 import { CategoryPills } from '@/components/CategoryPills';
 import { TimeToggle } from '@/components/TimeToggle';
 import { ActivityFeed } from '@/components/ActivityFeed';
+import { StickyBidBar } from '@/components/StickyBidBar';
 import Link from 'next/link';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 
@@ -46,7 +47,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const topBid = allBids[0] ?? 100;
 
   return (
-    <>
+    // pb-24 leaves room so the sticky bar doesn't cover the page footer on mobile
+    <div className="pb-24 lg:pb-0">
       {/* ── Hero Banner (compact) ──────────────────────────────────────────────────────────────── */}
       <section className="border-b-2 border-border px-4 py-5">
         <div className="mx-auto max-w-6xl">
@@ -59,6 +61,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <span className="font-display text-xs font-bold uppercase tracking-widest text-foreground">
                   Live Leaderboard
                 </span>
+                <span className="text-muted-foreground/50">·</span>
+                <span className="font-display text-xs font-bold text-accent">{stats.totalCandidates} candidates</span>
               </div>
               <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight
                              text-foreground sm:text-4xl">
@@ -70,11 +74,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </p>
             </div>
 
-            {/* Right: CTAs (always on one row) + stats (below on mobile, inline on sm+) */}
-            <div className="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+            {/* Right: CTAs + stats always stacked below */}
+            <div className="flex flex-col items-start gap-2">
               {/* Buttons row — never wraps internally */}
               <div className="flex items-center gap-3">
+                {/* id is watched by NavbarCta to reveal the navbar button on scroll */}
                 <Link
+                  id="hero-list-yourself"
                   href="/submit"
                   className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
                              bg-accent px-5 py-2 font-display text-sm font-bold text-white shadow-pop"
@@ -95,17 +101,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </Link>
                 )}
               </div>
-              {/* Stats — below buttons on mobile, inline on sm+ */}
-              <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
-                <span>
-                  <span className="font-display font-extrabold text-accent">{stats.totalCandidates}</span>{' '}candidates
-                </span>
-                {stats.totalUnlocks >= 5 && (
+              {/* Stats \u2014 only show unlocks (candidates moved to the badge above) */}
+              {stats.totalUnlocks >= 5 && (
+                <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
                   <span>
                     <span className="font-display font-extrabold text-accent">{stats.totalUnlocks}</span>{' '}unlocks
                   </span>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -207,7 +210,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           {/* Right sidebar */}
           <aside className="w-full lg:w-72 lg:shrink-0">
             <div className="space-y-5">
-              <BidWidget topBidCents={topBid} allBidsCents={allBids} />
+                {/* Hidden on small screens — the StickyBidBar handles mobile CTAs */}
+                <div className="hidden lg:block">
+                  <BidWidget topBidCents={topBid} allBidsCents={allBids} />
+                </div>
 
               {/* Activity feed */}
               <div className="rounded-xl border-2 border-border bg-card p-4 shadow-pop-sm">
@@ -220,7 +226,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </aside>
         </div>
       </div>
-    </>
+      {/* Sticky mobile bid bar — hidden on lg where the sidebar widget is visible */}
+      <StickyBidBar topBidCents={topBid} allBidsCents={allBids} />
+    </div>
   );
 }
 

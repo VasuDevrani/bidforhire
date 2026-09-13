@@ -12,9 +12,9 @@ interface TopPodiumProps {
 /* ── Chibi image map ── */
 const CHIBI_MAP: Record<string, string> = {
   rank1_female: '/chibis/rank1_female.png',
-  rank1_male:   '/chibis/rank1_male.jpg',
+  rank1_male:   '/chibis/rank1_male.png',
   rank2_female: '/chibis/rank2_female.png',
-  rank2_male:   '/chibis/rank2_male.jpg',
+  rank2_male:   '/chibis/rank2_male.png',
   rank3_female: '/chibis/rank3_female.png',
   rank3_male:   '/chibis/rank3_male.png',
 };
@@ -39,7 +39,7 @@ const PLATFORM: Record<
     bg:          'bg-accent',
     textColor:   'text-white',
     shadowClass: 'shadow-pop-violet',
-    chibiSize:   128,
+    chibiSize:   118,
     floatAnim:   'animate-float',
   },
   2: {
@@ -47,7 +47,7 @@ const PLATFORM: Record<
     bg:          'bg-secondary',
     textColor:   'text-white',
     shadowClass: 'shadow-pop-pink',
-    chibiSize:   108,
+    chibiSize:   98,
     floatAnim:   'animate-float-slow',
   },
   3: {
@@ -55,7 +55,7 @@ const PLATFORM: Record<
     bg:          'bg-tertiary',
     textColor:   'text-foreground',
     shadowClass: 'shadow-pop-amber',
-    chibiSize:   96,
+    chibiSize:   86,
     floatAnim:   'animate-float-rev',
   },
 };
@@ -87,7 +87,7 @@ export function TopPodium({ top3 }: TopPodiumProps) {
       </p>
 
       {/* Podium stage */}
-      <div className="flex items-end justify-center gap-3 sm:gap-6">
+      <div className="flex items-end justify-center gap-0 sm:gap-2">
         {slots.map(({ candidate, rank }) => {
           const p = PLATFORM[rank];
           const chibi = getChibiSrc(candidate.id, rank);
@@ -112,7 +112,7 @@ export function TopPodium({ top3 }: TopPodiumProps) {
               </div>
 
               {/* Name + bid label */}
-              <div className="mb-1.5 mt-1 text-center">
+              <div className="mb-0.5 mt-0 text-center">
                 <p className="max-w-[88px] overflow-hidden text-ellipsis whitespace-nowrap font-display text-[11px] font-bold text-foreground sm:max-w-[104px] sm:text-xs">
                   {firstName}
                 </p>

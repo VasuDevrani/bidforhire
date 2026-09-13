@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { SignOutButton } from '@/components/SignOutButton';
+import { NavbarCta } from '@/components/NavbarCta';
 
 export async function Navbar() {
   const session = await getServerSession(authOptions);
@@ -68,30 +68,8 @@ export async function Navbar() {
           )}
         </nav>
 
-        {/* CTA — changes based on auth state */}
-        {isRecruiter ? (
-          <Link
-            href="/recruiter/dashboard"
-            className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
-                       bg-accent px-4 py-2 font-display text-sm font-bold text-white shadow-pop"
-          >
-            My Dashboard
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </Link>
-        ) : (
-          <Link
-            href="/submit"
-            className="btn-pop flex items-center gap-2 rounded-full border-2 border-foreground
-                       bg-accent px-4 py-2 font-display text-sm font-bold text-white shadow-pop"
-          >
-            List Yourself
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-accent">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </Link>
-        )}
+        {/* CTA — route-aware client component (hides "List Yourself" on homepage) */}
+        <NavbarCta isRecruiter={isRecruiter} />
       </nav>
     </header>
   );
