@@ -60,9 +60,14 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
 
         {candidate.skills.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {candidate.skills.slice(0, 5).map((s) => (
+            {candidate.skills.slice(0, 3).map((s) => (
               <SkillChip key={s} skill={s} />
             ))}
+            {candidate.skills.length > 3 && (
+              <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                +{candidate.skills.length - 3}
+              </span>
+            )}
           </div>
         )}
 

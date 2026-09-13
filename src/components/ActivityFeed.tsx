@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { ArrowUp, Lock } from 'lucide-react';
 import { formatCents, timeAgo } from '@/lib/utils';
 
 type Activity = {
@@ -33,13 +34,16 @@ export function ActivityFeed({ activities }: ActivityFeedProps) {
         >
           {/* Colored icon badge */}
           <span
-            className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs
+            className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full
                         ${a.type === 'bid'
                           ? 'bg-accent/10 text-accent'
                           : 'bg-quaternary/20 text-quaternary'
                         }`}
           >
-            {a.type === 'bid' ? '↑' : '🔓'}
+            {a.type === 'bid'
+              ? <ArrowUp className="h-3 w-3" />
+              : <Lock className="h-3 w-3" />
+            }
           </span>
 
           {/* Description */}

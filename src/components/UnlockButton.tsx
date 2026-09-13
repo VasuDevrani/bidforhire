@@ -105,7 +105,9 @@ export function UnlockButton({ candidateId, isAuthenticated, freeUnlocksRemainin
               setLoading(false);
               return;
             }
-            router.push(`/recruiter/dashboard?unlocked=${data.candidateId}`);
+            // Refresh the current page — server component re-runs getCandidateContactInfo
+            // which will now find the Unlock record and reveal contact details inline.
+            router.refresh();
           } catch {
             setError('Verification failed — if you were charged, contact support.');
             setLoading(false);
