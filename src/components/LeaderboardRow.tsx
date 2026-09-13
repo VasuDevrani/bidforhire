@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight, Eye, Crown } from 'lucide-react';
 import { SkillChip } from './SkillChip';
+import { CompanyLogosGroup } from './CompanyLogo';
 import { formatCents } from '@/lib/utils';
 import type { PublicCandidate } from '@/lib/candidates';
 
@@ -31,7 +32,7 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
 
       {/* ── Header row: rank · name · role ···················· bid ── */}
       <div className="flex items-baseline justify-between gap-3">
-        <div className="flex min-w-0 items-baseline gap-2 overflow-hidden">
+        <div className="flex min-w-0 items-center gap-2 overflow-hidden">
           <span className="shrink-0 font-display text-xs font-bold text-muted-foreground">
             #{rank}
           </span>
@@ -40,9 +41,18 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
             {candidate.name}
           </span>
           {/* Role inline on sm+ */}
-          <span className="hidden shrink-0 items-baseline gap-1 text-sm text-muted-foreground sm:inline-flex">
+          <span className="hidden shrink-0 items-center gap-1.5 text-sm text-muted-foreground sm:inline-flex">
             · {candidate.role}
-            {rank === 1 && <Crown className="ml-1 inline h-3.5 w-3.5 text-accent" />}
+            {rank === 1 && <Crown className="inline h-3.5 w-3.5 text-accent" />}
+            {candidate.previousCompanies && candidate.previousCompanies.length > 0 && (
+              <span className="relative z-10 ml-1 flex items-center gap-1">
+                <span className="text-xs text-muted-foreground/60">·</span>
+                <CompanyLogosGroup companies={candidate.previousCompanies} />
+                <span className="text-xs text-muted-foreground/70">
+                  {candidate.previousCompanies.slice(0, 2).map((c) => c.name).join(', ')}
+                </span>
+              </span>
+            )}
           </span>
         </div>
         <span className="shrink-0 font-display text-base font-extrabold text-accent">
@@ -51,10 +61,15 @@ export function LeaderboardRow({ candidate, position }: LeaderboardRowProps) {
       </div>
 
       {/* Role on mobile */}
-      <p className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground sm:hidden">
-        {candidate.role}
+      <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground sm:hidden">
+        <span>{candidate.role}</span>
         {rank === 1 && <Crown className="h-3.5 w-3.5 text-accent" />}
-      </p>
+        {candidate.previousCompanies && candidate.previousCompanies.length > 0 && (
+          <span className="relative z-10 ml-0.5">
+            <CompanyLogosGroup companies={candidate.previousCompanies} />
+          </span>
+        )}
+      </div>
 
       {/* ── Summary ── */}
       <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted-foreground">

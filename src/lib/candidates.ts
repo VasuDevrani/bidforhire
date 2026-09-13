@@ -2,6 +2,7 @@ import { prisma } from '@/lib/db';
 import { UNLOCK_PRICE_CENTS } from '@/lib/constants';
 import { Prisma } from '@prisma/client';
 import type { Candidate } from '@prisma/client';
+import { type CompanyInfo } from '@/lib/companies';
 
 export type PublicCandidate = {
   id: string;
@@ -11,6 +12,7 @@ export type PublicCandidate = {
   skills: string[];
   summary: string;
   socialLinks: Record<string, string>;
+  previousCompanies: CompanyInfo[];
   currentBid: number;
   rank: number | null;
   category: string;
@@ -32,6 +34,9 @@ export function toPublicCandidate(c: Candidate): PublicCandidate {
     skills: c.skills,
     summary: c.summary,
     socialLinks: c.socialLinks as Record<string, string>,
+    previousCompanies: Array.isArray(c.previousCompanies)
+      ? (c.previousCompanies as unknown as CompanyInfo[])
+      : [],
     currentBid: c.currentBid,
     rank: c.rank,
     category: c.category,

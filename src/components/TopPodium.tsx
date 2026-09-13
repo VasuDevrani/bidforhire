@@ -81,10 +81,10 @@ export function TopPodium({ top3 }: TopPodiumProps) {
   return (
     <div className="mb-10">
       {/* Section label */}
-      <p className="mb-4 flex items-center justify-center gap-1.5 font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
+      {/* <p className="mb-4 flex items-center justify-center gap-1.5 font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
         <Trophy className="h-3.5 w-3.5" />
         Hall of Fame
-      </p>
+      </p> */}
 
       {/* Podium stage */}
       <div className="flex items-end justify-center gap-0 sm:gap-2">

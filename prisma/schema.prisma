@@ -64,8 +64,9 @@ model Candidate {
   roleSlug     String
   skills       String[]
   summary      String
-  socialLinks  Json     // { linkedin?, x?, portfolio?, github? }
-  email        String   // GATED — never in public API
+  socialLinks        Json     // { linkedin?, x?, portfolio?, github? }
+  previousCompanies  Json?    @default("[]") // [{ name, domain?, logo? }]
+  email              String   // GATED — never in public API
   phone        String?  // GATED — never in public API
   currentBid   Int      // in cents, drives rank
   rank         Int?     // computed, recalculated on bid change

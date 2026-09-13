@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
+import { CompanyCombobox } from './CompanyCombobox';
+import { type CompanyInfo } from '@/lib/companies';
 
 const SOCIAL_FIELDS = [
   { key: 'linkedin', label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/...' },
@@ -17,7 +19,7 @@ interface SubmitFormProps {
 }
 
 export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
-
+  const [companies, setCompanies] = useState<CompanyInfo[]>([]);
   const [form, setForm] = useState({
     name: '',
     role: '',
@@ -76,6 +78,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
           role: form.role,
           category: form.category,
           skills,
+          previousCompanies: companies,
           summary: form.summary,
           socialLinks,
           email: form.email,
@@ -208,6 +211,11 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
           onChange={(e) => set('skills', e.target.value)}
           className={inputClass}
         />
+      </Field>
+
+      {/* Previous Companies */}
+      <Field label="Previous Companies" hint="Pick or type past companies (e.g. Stripe, Google). Logos will be automatically added.">
+        <CompanyCombobox value={companies} onChange={setCompanies} />
       </Field>
 
       {/* Summary */}

@@ -11,6 +11,8 @@ import { FREE_UNLOCKS_PER_RECRUITER } from '@/lib/constants';
 import { BoostBidWidget } from '@/components/BoostBidWidget';
 import { getRecruiterByUserId } from '@/lib/recruiters';
 import { SkillChip } from '@/components/SkillChip';
+import { CompanyLogo } from '@/components/CompanyLogo';
+import { type CompanyInfo } from '@/lib/companies';
 import { UnlockButton } from '@/components/UnlockButton';
 import { formatCents, timeAgo } from '@/lib/utils';
 import Link from 'next/link';
@@ -109,6 +111,19 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               )}
             </div>
             <p className="mt-1 text-muted-foreground font-medium">{candidate.role}</p>
+            {Array.isArray(candidate.previousCompanies) && (candidate.previousCompanies as unknown as CompanyInfo[]).length > 0 && (
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                {(candidate.previousCompanies as unknown as CompanyInfo[]).map((comp) => (
+                  <span
+                    key={comp.name}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-0.5 text-xs font-medium text-foreground shadow-xs"
+                  >
+                    <CompanyLogo company={comp} size={14} showNameTooltip={false} />
+                    {comp.name}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
           <div className="text-right shrink-0">
             <div className="font-display text-2xl font-black text-accent">{formatCents(candidate.currentBid)}</div>

@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { name, role, category, skills, summary, socialLinks, email, phone, amountCents } = body;
+    const { name, role, category, skills, summary, socialLinks, email, phone, amountCents, previousCompanies } = body;
 
     // Validate required fields
     if (!name || !role || !category || !email || !amountCents) {
@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
         role: role.trim(),
         roleSlug,
         skills: Array.isArray(skills) ? skills.slice(0, 10) : [],
+        previousCompanies: Array.isArray(previousCompanies) ? previousCompanies.slice(0, 5) : [],
         summary: String(summary || '').slice(0, 300),
         socialLinks: socialLinks || {},
         email: email.toLowerCase().trim(),
