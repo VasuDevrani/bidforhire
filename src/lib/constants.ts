@@ -5,7 +5,15 @@ export const UNLOCK_PRICE_CENTS = Number(process.env.UNLOCK_PRICE_CENTS) || 500;
 export const MAX_UNLOCKS_PER_DAY = 20;
 export const FREE_UNLOCKS_PER_RECRUITER = 3;
 
-export const CATEGORIES = ['Engineering', 'Design', 'Marketing', 'Sales', 'Ops'] as const;
+export const CATEGORIES = [
+  'Engineering',
+  'Design',
+  'Marketing',
+  'Sales',
+  'Product',
+  'Data & AI',
+  'Operations & People',
+] as const;
 export type Category = (typeof CATEGORIES)[number];
 
 export const CATEGORY_SLUGS: Record<string, string> = {
@@ -13,7 +21,9 @@ export const CATEGORY_SLUGS: Record<string, string> = {
   Design: 'design',
   Marketing: 'marketing',
   Sales: 'sales',
-  Ops: 'ops',
+  Product: 'product',
+  'Data & AI': 'data-ai',
+  'Operations & People': 'ops', // keep 'ops' slug for existing DB records
 };
 
 export const SLUG_TO_CATEGORY: Record<string, string> = Object.fromEntries(

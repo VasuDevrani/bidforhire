@@ -38,7 +38,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
-    getLeaderboard({ page: 1, pageSize: 3 }), // always all-time top 3 for podium
+    getLeaderboard({ category: categoryFilter, timeframe, page: 1, pageSize: 3 }), // top 3 for current filters
   ]);
   const isRecruiter = !!session?.user;
 
@@ -139,10 +139,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               <EmptyState timeframe={timeframe} />
             ) : (
               <>
-                {/* Chibi podium — always shows global top 3 on page 1 */}
-                {page === 1 && globalTop3.candidates.length >= 3 && (
-                  <TopPodium top3={globalTop3.candidates.slice(0, 3)} />
-                )}
+                    {/* Podium — top 3 for the current filters */}
+                    {page === 1 && globalTop3.candidates.length >= 1 && (
+                      <TopPodium top3={globalTop3.candidates.slice(0, 3)} />
+                    )}
 
               <div className="space-y-4">
                 {leaderboard.candidates.map((c, i) => (
