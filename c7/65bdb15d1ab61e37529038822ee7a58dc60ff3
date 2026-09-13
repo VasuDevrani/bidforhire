@@ -1,0 +1,87 @@
+src/lib/razorpay.ts
+  s_87d05b28a6e0cb::t_765e2fac1a86dd 8-11
+  s_87d05b28a6e0cb::t_48aee7cc48d6f3 1-4,6,13-16
+src/app/api/checkout/verify/route.ts
+  s_87d05b28a6e0cb::t_d1aec18fff2209 83,92-97
+  s_87d05b28a6e0cb::t_90150491228876 1-45,53-57,76-82,84-91,98-131,133-162
+  s_a1c04624932ac4::t_e27e82983e10a7 46-52,132
+  s_87d05b28a6e0cb::t_8657bb2b3ce46a 58-75
+src/app/api/checkout/bid/route.ts
+  s_87d05b28a6e0cb::t_adc2cdb50d309a 126-128
+  s_87d05b28a6e0cb::t_f55f5792f6e6b4 3,17-19,23-25,78,90,101-102,105-106,113,116,122-125,129-130
+  s_87d05b28a6e0cb::t_340fe15e18568b 4,96-99,103-104,109
+  s_87d05b28a6e0cb::t_8da778f002660e 28-30,94,115,119-121,132-137
+prisma/schema.prisma
+  s_87d05b28a6e0cb::t_e12d7cc275a43a 104-109,132
+package.json
+  s_87d05b28a6e0cb::t_75ed6eeab232b4 18
+  s_87d05b28a6e0cb::t_83633a830fda04 25
+prisma/seed.ts
+  s_87d05b28a6e0cb::t_57c60aaa7a68c6 338
+src/components/BoostBidWidget.tsx
+  s_a1c04624932ac4::t_fe70ea100dd6e8 10,12-13,16-21,23-26,30-41,46-47,51-53,59,80,83,118,125-126,129,137,139-140,142,147,154-173,175-190,193-209
+  s_a1c04624932ac4::t_25e4b504248370 42-43,174
+  s_87d05b28a6e0cb::t_916c9cb6d20d42 76
+  s_87d05b28a6e0cb::t_2ec08dec57154b 5,64,67-75,77-79,81-82,84-109
+src/components/UnlockButton.tsx
+  s_87d05b28a6e0cb::t_b7f4323d2016ff 5,27,38,43,47-55,57-95,110
+  s_87d05b28a6e0cb::t_f04605652a8cd7 56
+src/lib/razorpay-checkout.ts
+  s_87d05b28a6e0cb::t_dda6ee3314ed43 1-52
+src/app/api/checkout/rebid/route.ts
+  s_87d05b28a6e0cb::t_103556f91c4408 3,11-12,15-17,92-93,96-97,107-108,111-114,116,118
+  s_87d05b28a6e0cb::t_8fbeb86a054d63 4,89,91,94-95
+  s_87d05b28a6e0cb::t_6dec37e7ccd84c 115
+  s_a1c04624932ac4::t_2a64b36c466d40 85-86,88,90,100-103,117
+src/app/api/checkout/unlock/route.ts
+  s_87d05b28a6e0cb::t_8bf26c3deeffe3 93
+  s_87d05b28a6e0cb::t_78e1d81caaf8a9 5,8,16-19,72-73,76-77,85-86,89-92,94-95
+  s_87d05b28a6e0cb::t_dac61acc10e959 6,68-70,74-75,81
+src/app/terms/page.tsx
+  s_87d05b28a6e0cb::t_3389a2f732aa07 100
+src/app/rules/page.tsx
+  s_87d05b28a6e0cb::t_cd5512e38156df 184
+src/lib/currency.ts
+  s_87d05b28a6e0cb::t_f065d52abccc57 63-70,73-76
+  s_87d05b28a6e0cb::t_bca22253b985e7 1-62,71-72,77-150
+src/lib/candidates.ts
+  s_a1c04624932ac4::t_96226625677eaa 3
+  s_a1c04624932ac4::t_07897ddb7713d7 145,148-165
+.env.example
+  s_87d05b28a6e0cb::t_1396d2c11ff6a7 15-20
+src/app/api/webhooks/razorpay/route.ts
+  s_87d05b28a6e0cb::t_1f581635413909 1-70,72-88,91-92,94-158
+  s_87d05b28a6e0cb::t_ae2f817ee4d943 71,89-90,93
+src/app/candidate/[id]/page.tsx
+  s_a1c04624932ac4::t_0631b04be94bb7 205
+src/app/privacy/page.tsx
+  s_87d05b28a6e0cb::t_466ee506d363b3 48,82
+src/components/SubmitForm.tsx
+  s_87d05b28a6e0cb::t_105c9c0a5a572d 113
+  s_87d05b28a6e0cb::t_f89cce1af024cb 102
+  s_87d05b28a6e0cb::t_6da440e5a17541 5,69,89,93-101,103-112,114-144,290
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "c765bdb15d1ab61e37529038822ee7a58dc60ff3",
+  "prompts": {},
+  "sessions": {
+    "s_87d05b28a6e0cb": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478083",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    },
+    "s_a1c04624932ac4": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478113",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
