@@ -1,0 +1,24 @@
+src/components/CompanyLogo.tsx
+  s_ebe05af1da25f2::t_2158d5e4116899 12-41
+src/components/LeaderboardRow.tsx
+  s_ebe05af1da25f2::t_2b60bbfeb770b4 48-53
+src/lib/companies.ts
+  s_ebe05af1da25f2::t_3d8f5137f577d9 42-48,53,61-62
+  s_ebe05af1da25f2::t_3a20fa33bbb0f9 49-52,54-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "1c3c410d5452e2b89e823ef4e11189cf00cc7fa7",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
