@@ -38,7 +38,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
-    getLeaderboard({ category: categoryFilter, timeframe, page: 1, pageSize: 3 }), // top 3 for current filters
+    getLeaderboard({ page: 1, pageSize: 3 }), // always global all-time top 3 (ignores active filters)
     getAllActiveBids(), // all active bid amounts for rank prediction in BidWidget
   ]);
   const isRecruiter = !!session?.user;
