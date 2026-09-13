@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Building2, Unlock, CalendarCheck, Archive, ArrowRight, ArrowLeft } from 'lucide-react';
+import { RecruiterSignupForm } from '@/components/RecruiterSignupForm';
 
 export const metadata: Metadata = {
   title: 'Recruiter Sign In — BidForHire',
@@ -12,7 +13,7 @@ interface SignupPageProps {
 }
 
 const PERKS = [
-  { Icon: Unlock,        text: 'First 3 unlocks are free — then $5 per candidate' },
+  { Icon: Unlock,        text: 'First 3 unlocks are free — then $10 for lifetime access' },
   { Icon: CalendarCheck, text: 'Up to 20 unlocks per day'                          },
   { Icon: Archive,       text: 'Access your unlocked contacts forever'              },
 ];
