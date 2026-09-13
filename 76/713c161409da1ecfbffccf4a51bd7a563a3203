@@ -1,0 +1,25 @@
+src/lib/avatar.ts
+  s_ebe05af1da25f2::t_8c2d4830c42543 1-35
+src/components/CandidateAvatar.tsx
+  s_ebe05af1da25f2::t_404492c11763ee 1-68
+src/components/TopPodium.tsx
+  s_ebe05af1da25f2::t_1ebf1be80df061 3,13,20,27,34,38-43,51,60,71-77,81-83,94,96-98
+src/app/page.tsx
+  s_ebe05af1da25f2::t_a0eeaa280c047f 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "76713c161409da1ecfbffccf4a51bd7a563a3203",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
