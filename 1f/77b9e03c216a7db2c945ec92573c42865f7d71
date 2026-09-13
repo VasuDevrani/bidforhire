@@ -1,0 +1,35 @@
+src/lib/constants.ts
+  s_ebe05af1da25f2::t_201b6b42796119 4-5
+src/app/api/webhooks/razorpay/route.ts
+  s_ebe05af1da25f2::t_33c4f84f0072e8 136-165,167
+prisma/schema.prisma
+  s_ebe05af1da25f2::t_54b8c4ac5cc406 6-8
+  s_ebe05af1da25f2::t_f6f1a7cc9fb7a3 117-123
+src/app/candidate/[id]/page.tsx
+  s_ebe05af1da25f2::t_775918d1b26302 68,73
+  s_ebe05af1da25f2::t_27946f67fdd7bb 187
+src/app/api/checkout/unlock/route.ts
+  s_ebe05af1da25f2::t_2fa105faca9c6e 7-8,15-18,20,42-46,61,63-66,72,74,77
+src/app/api/recruiter/unlock-lifetime/route.ts
+  s_ebe05af1da25f2::t_9508e415753adc 1-92
+src/app/api/checkout/verify/route.ts
+  s_ebe05af1da25f2::t_416480ce0a3f3a 136-167
+src/components/UnlockButton.tsx
+  s_ebe05af1da25f2::t_0afde2e5683468 5,14-15,18-23,28,56-57,61,69-79,83-106,125,163,193-194,196-197,220-221,223-224,231,234-236,238-240,242-251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "1f77b9e03c216a7db2c945ec92573c42865f7d71",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
