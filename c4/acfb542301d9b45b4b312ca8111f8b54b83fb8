@@ -1,0 +1,53 @@
+src/app/faq/page.tsx
+  s_d377e9a7f09d0f::t_5135b482db83d4 93
+src/components/TimeToggle.tsx
+  s_d377e9a7f09d0f::t_d4d6a397fe007c 29
+src/app/page.tsx
+  s_d377e9a7f09d0f::t_abfdcd5aca0215 84-88
+  s_d377e9a7f09d0f::t_858384a84f92cc 7,152,156-157,167
+  s_d377e9a7f09d0f::t_6acd4527c249f6 35,40,153-155
+  s_d377e9a7f09d0f::t_391412d08f2369 56
+src/components/BidWidget.tsx
+  s_d377e9a7f09d0f::t_d58d1ba292a53a 12,14,17,21,29,37
+src/components/LeaderboardRow.tsx
+  s_d377e9a7f09d0f::t_9494b42529e76b 45
+  s_d377e9a7f09d0f::t_daff274fda0a32 2
+  s_d377e9a7f09d0f::t_71fea0db4fc632 100-103
+  s_d377e9a7f09d0f::t_86ba46ba79c47a 104
+  s_d377e9a7f09d0f::t_cbdf7a2c5331d0 29
+  s_d377e9a7f09d0f::t_d7a9f025af0791 12-17
+  s_d377e9a7f09d0f::t_14965b5fd3a7ed 72-81
+src/components/CategoryPills.tsx
+  s_d377e9a7f09d0f::t_0fe168b9408a5f 33
+  s_d377e9a7f09d0f::t_0051236f9a3000 32
+src/app/privacy/page.tsx
+  s_d377e9a7f09d0f::t_aac5163bd42cf7 136-139
+src/app/terms/page.tsx
+  s_d377e9a7f09d0f::t_19f0a5825d7e3c 153-156
+src/app/rules/page.tsx
+  s_d377e9a7f09d0f::t_d9a55a222630b1 230-232
+src/components/TopPodium.tsx
+  s_d377e9a7f09d0f::t_2afece9382b44b 1,4
+  s_d377e9a7f09d0f::t_253176938a7857 63-66,84-86,130
+  s_d377e9a7f09d0f::t_6c7eefd24b1975 82,90,103,114,116
+  s_d377e9a7f09d0f::t_83e7f37edda596 2-3,5-62,67-81,83,87-89,91-102,104-108,110-113,115,117-126,129,131-138
+  s_d377e9a7f09d0f::t_55c47bb21c2499 109,127-128
+src/components/StatsBar.tsx
+  s_d377e9a7f09d0f::t_bd0f3f62b0d50e 17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "c4acfb542301d9b45b4b312ca8111f8b54b83fb8",
+  "prompts": {},
+  "sessions": {
+    "s_d377e9a7f09d0f": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478117",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
