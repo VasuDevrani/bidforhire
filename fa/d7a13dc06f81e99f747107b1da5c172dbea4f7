@@ -1,0 +1,21 @@
+src/components/StickyBidBar.tsx
+  s_ebe05af1da25f2::t_c7d5b6c8172347 118
+src/components/BidWidget.tsx
+  s_ebe05af1da25f2::t_757f53f1e3fbfb 57,59-66,70,145-147
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "fad7a13dc06f81e99f747107b1da5c172dbea4f7",
+  "prompts": {},
+  "sessions": {
+    "s_ebe05af1da25f2": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478126",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
