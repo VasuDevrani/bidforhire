@@ -21,7 +21,7 @@ const sections = [
             'Minimum bid: $1',
             'Your listing stays live until you choose to remove it',
             'You can boost your bid at any time to climb the leaderboard',
-            'One active listing per person',
+            'One active listing per person on the leaderboard',
           ].map((item) => (
             <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
               <User className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
