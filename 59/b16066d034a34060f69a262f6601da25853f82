@@ -1,0 +1,35 @@
+src/app/contact/page.tsx
+  s_0146cb175c7514::t_8dca77ef692e6b 3,130-131
+src/app/rules/page.tsx
+  s_0146cb175c7514::t_7963ae8e867c08 3,242-243
+src/app/privacy/page.tsx
+  s_0146cb175c7514::t_4bc07d9cab1231 10,150-151
+src/app/refund/page.tsx
+  s_0146cb175c7514::t_14a1974d0dea6e 3,146-147
+src/components/BackToLeaderboard.tsx
+  s_0146cb175c7514::t_7e9ee635482f97 1-16
+src/app/faq/page.tsx
+  s_0146cb175c7514::t_a2c2207539b36a 13,109-110
+src/app/about/page.tsx
+  s_0146cb175c7514::t_71d45755ba3a67 3,137-138
+src/app/terms/page.tsx
+  s_0146cb175c7514::t_c4944756233ac7 12,167-168
+src/app/pricing/page.tsx
+  s_0146cb175c7514::t_f9a122cb36b3c7 3,149-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "59b16066d034a34060f69a262f6601da25853f82",
+  "prompts": {},
+  "sessions": {
+    "s_0146cb175c7514": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478339",
+        "model": "OPENROUTER_GPT_5_POINT_6_TERRA"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
