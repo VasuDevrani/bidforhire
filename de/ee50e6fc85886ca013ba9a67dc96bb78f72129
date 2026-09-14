@@ -1,0 +1,31 @@
+src/app/contact/page.tsx
+  s_0146cb175c7514::t_37096da90f6bbc 1-87,89-131
+  s_0146cb175c7514::t_524cdc29af58cd 88
+src/app/refund/page.tsx
+  s_0146cb175c7514::t_6494597447d676 1-147
+src/app/layout.tsx
+  s_0146cb175c7514::t_5a8c675adb45ca 50-53
+src/app/pricing/page.tsx
+  s_0146cb175c7514::t_3ccfc9b0288066 1-14,17-20,22-55,59-61,65-150
+  s_0146cb175c7514::t_f3c20fceb2b227 15-16,21
+  s_0146cb175c7514::t_9b2f637be132fc 56-58,62-64
+src/app/about/page.tsx
+  s_0146cb175c7514::t_75723dbf411219 1-15,17-28,31-48,50-53,55-67,72-87,89-138
+  s_0146cb175c7514::t_651a893d06557f 29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "deee50e6fc85886ca013ba9a67dc96bb78f72129",
+  "prompts": {},
+  "sessions": {
+    "s_0146cb175c7514": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478339",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
