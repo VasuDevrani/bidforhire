@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import type { LucideIcon } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 import {
   BadgeDollarSign,
   Ban,
@@ -238,6 +239,8 @@ export default function RulesPage() {
           </section>
         ))}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

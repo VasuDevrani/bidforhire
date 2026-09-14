@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Info, Target, Users, Zap, ShieldCheck, Globe } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'About Us — BidForHire' };
 
@@ -133,6 +134,8 @@ export default function AboutPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

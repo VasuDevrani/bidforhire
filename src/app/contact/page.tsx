@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Mail, Clock, MapPin, MessageCircle, AlertCircle } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'Contact Us — BidForHire' };
 
@@ -126,6 +127,8 @@ export default function ContactPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

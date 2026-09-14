@@ -10,6 +10,7 @@ import {
   RefreshCcw,
   LayoutGrid,
 } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'FAQ — BidForHire' };
 
@@ -105,6 +106,8 @@ export default function FaqPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

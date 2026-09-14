@@ -9,6 +9,7 @@ import {
   AlertTriangle,
   RefreshCw,
 } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'Terms of Service — BidForHire' };
 
@@ -163,6 +164,8 @@ export default function TermsPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

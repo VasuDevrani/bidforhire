@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { RefreshCw, XCircle, CheckCircle, CreditCard, Mail, AlertTriangle } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'Cancellation & Refund Policy — BidForHire' };
 
@@ -142,6 +143,8 @@ export default function RefundPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

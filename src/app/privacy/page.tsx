@@ -7,6 +7,7 @@ import {
   Clock,
   Mail,
 } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'Privacy Policy — BidForHire' };
 
@@ -146,6 +147,8 @@ export default function PrivacyPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }

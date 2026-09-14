@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Tag, User, Building2, Zap, CreditCard, HelpCircle } from 'lucide-react';
+import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
 export const metadata: Metadata = { title: 'Pricing — BidForHire' };
 
@@ -145,6 +146,8 @@ export default function PricingPage() {
           );
         })}
       </div>
+
+      <BackToLeaderboard />
     </div>
   );
 }
