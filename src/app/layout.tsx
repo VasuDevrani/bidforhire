@@ -47,6 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <nav className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm font-medium text-white/60">
               {[
+                { href: '/about',   label: 'About'   },
+                { href: '/contact', label: 'Contact' },
+                { href: '/pricing', label: 'Pricing' },
+                { href: '/refund',  label: 'Refund Policy' },
                 { href: '/rules',   label: 'Rules'   },
                 { href: '/faq',     label: 'FAQ'     },
                 { href: '/privacy', label: 'Privacy' },
