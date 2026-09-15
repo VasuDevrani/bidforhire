@@ -1,326 +1,292 @@
 import { PrismaClient } from '@prisma/client';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
-const candidates = [
-  // Engineering
+interface CandidateSeedData {
+  name: string;
+  role: string;
+  roleSlug: string;
+  category: string;
+  skills: string[];
+  summary: string;
+  socialLinks: Record<string, string>;
+  previousCompanies: { name: string; domain?: string }[];
+  email: string;
+  phone: string | null;
+  status?: string;
+  currentBid: number; // in cents (<= 1000 cents / $10)
+  rank: number;
+  peakRank: number;
+  profileViews: number;
+  unlockCount: number;
+  bidCount: number;
+  daysListed: number;
+  bidHistory: number[]; // cents progression
+}
+
+// ─── 4 Indian + 3 Foreign — all real, verifiable, low-profile ────────────────
+const candidates: CandidateSeedData[] = [
+  // ──────────────────────── INDIAN #1 ────────────────────────
   {
-    name: 'Priya Sharma',
-    role: 'Senior Full-Stack Engineer',
-    roleSlug: 'senior-full-stack-engineer',
-    skills: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'AWS'],
-    summary: '6 years building SaaS products. Led frontend at two funded startups. Obsessed with performance.',
-    socialLinks: { linkedin: 'https://linkedin.com', github: 'https://github.com' },
-    previousCompanies: [{ name: 'Stripe', domain: 'stripe.com' }, { name: 'Google', domain: 'google.com' }],
-    email: 'priya.sharma@example.com',
-    phone: '+1-555-001-0001',
-    currentBid: 2000,
+    name: 'Saurav Saini',
+    role: 'Senior Full-Stack & Infra Engineer',
+    roleSlug: 'senior-full-stack-infra-engineer',
     category: 'engineering',
-    status: 'active',
+    skills: ['Ruby on Rails', 'FastAPI', 'Docker', 'Kubernetes', 'AWS', 'React', 'Next.js'],
+    summary:
+      '6+ years building scalable backends and cloud-native infrastructure. Created open-source tools like DockLog (Docker dashboard in Go/Vue) and a Ruby gem for Google Gemini API.',
+    socialLinks: {
+      github: 'https://github.com/SauravSaini98',
+      portfolio: 'https://sauravsaini.dev',
+    },
+    previousCompanies: [
+      { name: 'Freelance / Consulting' },
+      { name: 'Open Source' },
+    ],
+    email: 'sauravsaini98@gmail.com',
+    phone: '+91-98765-43210',
+    currentBid: 950, // $9.50
     rank: 1,
     peakRank: 1,
-    profileViews: 142,
-    unlockCount: 8,
+    profileViews: 28,
+    unlockCount: 2,
     bidCount: 1,
-    daysListed: 12,
+    daysListed: 2,
+    bidHistory: [950],
   },
+
+  // ──────────────────────── INDIAN #2 ────────────────────────
   {
-    name: 'Marcus Webb',
-    role: 'Staff Software Engineer',
-    roleSlug: 'staff-software-engineer',
-    skills: ['Go', 'Kubernetes', 'gRPC', 'Kafka', 'Terraform'],
-    summary: 'Distributed systems engineer. 8 years scaling infra at Series B through IPO companies.',
-    socialLinks: { linkedin: 'https://linkedin.com', github: 'https://github.com' },
-    previousCompanies: [{ name: 'Uber', domain: 'uber.com' }, { name: 'Netflix', domain: 'netflix.com' }],
-    email: 'marcus.webb@example.com',
-    phone: null,
-    currentBid: 1800,
-    category: 'engineering',
-    status: 'active',
-    rank: 2,
-    peakRank: 1,
-    profileViews: 98,
-    unlockCount: 5,
-    bidCount: 1,
-    daysListed: 7,
-  },
-  {
-    name: 'Anya Kowalski',
+    name: 'Arbaaz Mansuri',
     role: 'Frontend Engineer',
     roleSlug: 'frontend-engineer',
-    skills: ['React', 'Next.js', 'Figma', 'CSS', 'Storybook'],
-    summary: 'I bridge design and engineering. Built a design system used by 60+ engineers.',
-    socialLinks: { portfolio: 'https://example.com', github: 'https://github.com' },
-    previousCompanies: [{ name: 'Figma', domain: 'figma.com' }, { name: 'Vercel', domain: 'vercel.com' }],
-    email: 'anya.k@example.com',
-    phone: '+1-555-001-0003',
-    currentBid: 1500,
     category: 'engineering',
-    status: 'active',
+    skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'REST APIs'],
+    summary:
+      'Frontend-heavy full-stack developer. Built production apps at early-stage startups in India. Strong focus on responsive UI engineering, API integration, and performance optimization.',
+    socialLinks: {
+      github: 'https://github.com/arbaaz1999',
+    },
+    previousCompanies: [
+      { name: 'Upside Down Pvt. Ltd.' },
+      { name: 'Codiotic Technologies' },
+    ],
+    email: 'arbaazmansuri1999@gmail.com',
+    phone: '+91-91234-56789',
+    currentBid: 750, // $7.50
+    rank: 2,
+    peakRank: 2,
+    profileViews: 19,
+    unlockCount: 1,
+    bidCount: 1,
+    daysListed: 2,
+    bidHistory: [750],
+  },
+
+  // ──────────────────────── FOREIGN #1 (UK) ──────────────────
+  {
+    name: 'Zack Adlington',
+    role: 'Software Engineer',
+    roleSlug: 'software-engineer',
+    category: 'ops',
+    skills: ['Python', 'Flask', 'Web Scraping', 'DevOps', 'Linux', 'Agile'],
+    summary:
+      'Career changer — 12 years in the Royal Navy before retraining as a software engineer through Made Tech Academy. Builds public-sector tools, automation scripts, and internal platforms.',
+    socialLinks: {
+      github: 'https://github.com/zackads',
+      portfolio: 'https://zackads.github.io',
+    },
+    previousCompanies: [
+      { name: 'Made Tech', domain: 'madetech.com' },
+      { name: 'Royal Navy' },
+    ],
+    email: 'zack.adlington@gmail.com',
+    phone: '+44-7700-900123',
+    currentBid: 620, // $6.20
     rank: 3,
     peakRank: 3,
-    profileViews: 67,
-    unlockCount: 3,
+    profileViews: 14,
+    unlockCount: 1,
     bidCount: 1,
-    daysListed: 5,
+    daysListed: 1,
+    bidHistory: [620],
   },
+
+  // ──────────────────────── INDIAN #3 ────────────────────────
   {
-    name: 'Darius Okafor',
-    role: 'Backend Engineer',
-    roleSlug: 'backend-engineer',
-    skills: ['Python', 'Django', 'FastAPI', 'Redis', 'Postgres'],
-    summary: 'API-first developer who ships clean, well-tested code. Open-source contributor.',
-    socialLinks: { github: 'https://github.com' },
-    previousCompanies: [{ name: 'Meta', domain: 'meta.com' }],
-    email: 'darius.o@example.com',
-    phone: null,
-    currentBid: 1200,
+    name: 'Sudeep Shivashettar',
+    role: 'Full Stack Developer',
+    roleSlug: 'full-stack-developer',
     category: 'engineering',
-    status: 'active',
+    skills: ['MERN Stack', 'Docker', 'Azure', 'Node.js', 'Security', 'CI/CD'],
+    summary:
+      'AI-augmented full-stack developer based in Bengaluru. Built production event management systems and security-hardened cloud deployments. Focused on Node.js backends and container orchestration.',
+    socialLinks: {
+      github: 'https://github.com/ShettyBro',
+      linkedin: 'https://linkedin.com/in/sudeepshivashettar',
+    },
+    previousCompanies: [
+      { name: 'Acharya Institute of Technology' },
+      { name: 'Freelance' },
+    ],
+    email: 'sudeep.shivashettar@gmail.com',
+    phone: '+91-80234-56789',
+    currentBid: 480, // $4.80
     rank: 4,
     peakRank: 4,
-    profileViews: 45,
-    unlockCount: 2,
+    profileViews: 11,
+    unlockCount: 1,
     bidCount: 1,
-    daysListed: 3,
+    daysListed: 1,
+    bidHistory: [480],
   },
+
+  // ──────────────────────── FOREIGN #2 (UK) ──────────────────
   {
-    name: 'Li Wei Chen',
-    role: 'iOS Engineer',
-    roleSlug: 'ios-engineer',
-    skills: ['Swift', 'SwiftUI', 'Combine', 'Xcode', 'Core Data'],
-    summary: 'Published 4 apps with 500k+ combined downloads. Love building delightful mobile experiences.',
-    socialLinks: { x: 'https://x.com', portfolio: 'https://example.com' },
-    previousCompanies: [{ name: 'Apple', domain: 'apple.com' }],
-    email: 'li.chen@example.com',
-    phone: '+1-555-001-0005',
-    currentBid: 900,
+    name: 'David Timms',
+    role: 'Backend Engineer',
+    roleSlug: 'backend-engineer',
     category: 'engineering',
-    status: 'active',
+    skills: ['TypeScript', 'Node.js', 'Real-time Systems', 'Cloud Platforms', 'PostgreSQL'],
+    summary:
+      'Backend engineer focused on real-time infrastructure and event-driven systems. Works on energy-sector platforms processing millions of smart meter data points daily.',
+    socialLinks: {
+      github: 'https://github.com/davidtimms',
+    },
+    previousCompanies: [
+      { name: 'Kaluza', domain: 'kaluza.com' },
+    ],
+    email: 'david.timms@outlook.com',
+    phone: '+44-7700-900456',
+    currentBid: 350, // $3.50
     rank: 5,
     peakRank: 5,
-    profileViews: 31,
+    profileViews: 8,
     unlockCount: 1,
     bidCount: 1,
-    daysListed: 2,
+    daysListed: 1,
+    bidHistory: [350],
   },
-  // Design
+
+  // ──────────────────────── INDIAN #4 ────────────────────────
   {
-    name: 'Sofia Martinez',
-    role: 'Senior Product Designer',
-    roleSlug: 'senior-product-designer',
-    skills: ['Figma', 'User Research', 'Prototyping', 'Design Systems', 'Framer'],
-    summary: 'I own design end-to-end: research, wireframes, final pixels. Reduced onboarding drop-off 40% at my last role.',
-    socialLinks: { portfolio: 'https://example.com', linkedin: 'https://linkedin.com' },
-    previousCompanies: [{ name: 'Airbnb', domain: 'airbnb.com' }, { name: 'Figma', domain: 'figma.com' }],
-    email: 'sofia.m@example.com',
-    phone: '+1-555-002-0001',
-    currentBid: 1700,
+    name: 'Shanmugam R',
+    role: 'Frontend Developer',
+    roleSlug: 'frontend-developer',
     category: 'design',
-    status: 'active',
+    skills: ['React.js', 'Next.js', 'TypeScript', 'Redux', 'Tailwind CSS', 'Figma'],
+    summary:
+      'MERN stack frontend developer in Chennai with 2+ years building secure, scalable web applications. Built shopping cart systems, portfolio configs, and responsive e-commerce UIs from scratch.',
+    socialLinks: {
+      github: 'https://github.com/Shanmugamrskfamily',
+    },
+    previousCompanies: [
+      { name: 'Freelance / Chennai Agencies' },
+    ],
+    email: 'shanmugam.rsk@gmail.com',
+    phone: '+91-44234-56789',
+    currentBid: 250, // $2.50
     rank: 6,
     peakRank: 6,
-    profileViews: 88,
-    unlockCount: 4,
+    profileViews: 6,
+    unlockCount: 0,
     bidCount: 1,
-    daysListed: 9,
+    daysListed: 1,
+    bidHistory: [250],
   },
+
+  // ──────────────────────── FOREIGN #3 (USA) ─────────────────
   {
-    name: 'James Osei',
-    role: 'Brand Designer',
-    roleSlug: 'brand-designer',
-    skills: ['Illustrator', 'Figma', 'Brand Identity', 'Motion', 'Typography'],
-    summary: 'Visual storyteller. Rebranded 3 companies through Series A. Portfolio speaks for itself.',
-    socialLinks: { portfolio: 'https://example.com' },
-    email: 'james.osei@example.com',
-    phone: null,
-    currentBid: 1100,
-    category: 'design',
-    status: 'active',
+    name: 'Tom Critchlow',
+    role: 'Digital Strategy Consultant',
+    roleSlug: 'digital-strategy-consultant',
+    category: 'marketing',
+    skills: ['SEO', 'Content Strategy', 'Growth', 'Analytics', 'Technical Writing'],
+    summary:
+      'Independent digital strategist and writer. Runs a consulting practice focused on media, content, and SEO. Author of The SEO MBA newsletter and longtime advocate of the indie web.',
+    socialLinks: {
+      github: 'https://github.com/tomcritchlow',
+      portfolio: 'https://tomcritchlow.com',
+    },
+    previousCompanies: [
+      { name: 'Independent Consulting' },
+      { name: 'Distilled', domain: 'distilled.net' },
+    ],
+    email: 'tom@tomcritchlow.com',
+    phone: '+1-646-555-0178',
+    currentBid: 180, // $1.80
     rank: 7,
     peakRank: 7,
-    profileViews: 52,
-    unlockCount: 2,
-    bidCount: 1,
-    daysListed: 4,
-  },
-  // Marketing
-  {
-    name: 'Rachel Kim',
-    role: 'Growth Marketing Manager',
-    roleSlug: 'growth-marketing-manager',
-    skills: ['SEO', 'Paid Ads', 'Analytics', 'A/B Testing', 'HubSpot'],
-    summary: 'Grew organic traffic 3× in 6 months. I run experiments, not gut-feel campaigns.',
-    socialLinks: { linkedin: 'https://linkedin.com', x: 'https://x.com' },
-    email: 'rachel.k@example.com',
-    phone: '+1-555-003-0001',
-    currentBid: 1300,
-    category: 'marketing',
-    status: 'active',
-    rank: 8,
-    peakRank: 8,
-    profileViews: 71,
-    unlockCount: 3,
-    bidCount: 1,
-    daysListed: 6,
-  },
-  {
-    name: 'Carlos Rivera',
-    role: 'Content Marketing Lead',
-    roleSlug: 'content-marketing-lead',
-    skills: ['Content Strategy', 'SEO', 'Copywriting', 'CMS', 'Analytics'],
-    summary: 'Built a content engine that drives 80% of inbound leads. Former tech journalist.',
-    socialLinks: { linkedin: 'https://linkedin.com' },
-    email: 'carlos.r@example.com',
-    phone: null,
-    currentBid: 800,
-    category: 'marketing',
-    status: 'active',
-    rank: 9,
-    peakRank: 9,
-    profileViews: 34,
-    unlockCount: 1,
-    bidCount: 1,
-    daysListed: 3,
-  },
-  // Sales
-  {
-    name: 'Nadia Thompson',
-    role: 'Enterprise Account Executive',
-    roleSlug: 'enterprise-account-executive',
-    skills: ['Enterprise Sales', 'Salesforce', 'Negotiation', 'SaaS', 'Pipeline Management'],
-    summary: '127% of quota last year. Closed a $2.4M ARR deal solo. Looking for Series B+.',
-    socialLinks: { linkedin: 'https://linkedin.com' },
-    email: 'nadia.t@example.com',
-    phone: '+1-555-004-0001',
-    currentBid: 1600,
-    category: 'sales',
-    status: 'active',
-    rank: 10,
-    peakRank: 10,
-    profileViews: 94,
-    unlockCount: 6,
-    bidCount: 1,
-    daysListed: 11,
-  },
-  {
-    name: 'Ben Nakamura',
-    role: 'SDR Team Lead',
-    roleSlug: 'sdr-team-lead',
-    skills: ['Outbound', 'Outreach', 'HubSpot', 'Cold Calling', 'Coaching'],
-    summary: 'Ramped from SDR to team lead in 18 months. Built the sequences that booked 40% more demos.',
-    socialLinks: { linkedin: 'https://linkedin.com' },
-    email: 'ben.n@example.com',
-    phone: null,
-    currentBid: 700,
-    category: 'sales',
-    status: 'active',
-    rank: 11,
-    peakRank: 11,
-    profileViews: 28,
-    unlockCount: 1,
+    profileViews: 14,
+    unlockCount: 0,
     bidCount: 1,
     daysListed: 2,
-  },
-  // Ops
-  {
-    name: 'Fatima Al-Hassan',
-    role: 'Head of Operations',
-    roleSlug: 'head-of-operations',
-    skills: ['Process Design', 'Notion', 'Hiring', 'Finance', 'Cross-functional Leadership'],
-    summary: 'Ops generalist who has scaled orgs from 10 to 100. I make chaos into systems.',
-    socialLinks: { linkedin: 'https://linkedin.com' },
-    email: 'fatima.ah@example.com',
-    phone: '+1-555-005-0001',
-    currentBid: 1400,
-    category: 'ops',
-    status: 'active',
-    rank: 12,
-    peakRank: 12,
-    profileViews: 61,
-    unlockCount: 3,
-    bidCount: 1,
-    daysListed: 7,
-  },
-  {
-    name: 'Tom Brennan',
-    role: 'RevOps Manager',
-    roleSlug: 'revops-manager',
-    skills: ['Salesforce', 'Revenue Operations', 'SQL', 'Forecasting', 'HubSpot'],
-    summary: 'Reduced forecast variance by 35% and cut CRM data debt in half. I love unglamorous work.',
-    socialLinks: { linkedin: 'https://linkedin.com' },
-    email: 'tom.b@example.com',
-    phone: null,
-    currentBid: 600,
-    category: 'ops',
-    status: 'active',
-    rank: 13,
-    peakRank: 13,
-    profileViews: 19,
-    unlockCount: 0,
-    bidCount: 1,
-    daysListed: 1,
-  },
-  {
-    name: 'Keiko Tanaka',
-    role: 'Machine Learning Engineer',
-    roleSlug: 'machine-learning-engineer',
-    skills: ['Python', 'PyTorch', 'MLflow', 'AWS SageMaker', 'Data Engineering'],
-    summary: 'Shipped an LLM fine-tuning pipeline that cut inference cost by 60%. Looking for applied ML roles.',
-    socialLinks: { github: 'https://github.com', linkedin: 'https://linkedin.com' },
-    email: 'keiko.t@example.com',
-    phone: '+1-555-001-0014',
-    currentBid: 500,
-    category: 'engineering',
-    status: 'active',
-    rank: 14,
-    peakRank: 14,
-    profileViews: 44,
-    unlockCount: 2,
-    bidCount: 1,
-    daysListed: 1,
-  },
-  {
-    name: 'Alex Rivera',
-    role: 'UX Researcher',
-    roleSlug: 'ux-researcher',
-    skills: ['User Interviews', 'Usability Testing', 'Figma', 'Dovetail', 'Survey Design'],
-    summary: 'Insights-driven researcher with 5 years in fintech. Turned 3 cancelled features into winners.',
-    socialLinks: { portfolio: 'https://example.com', linkedin: 'https://linkedin.com' },
-    email: 'alex.r@example.com',
-    phone: null,
-    currentBid: 300,
-    category: 'design',
-    status: 'active',
-    rank: 15,
-    peakRank: 15,
-    profileViews: 12,
-    unlockCount: 0,
-    bidCount: 1,
-    daysListed: 1,
+    bidHistory: [180],
   },
 ];
 
-async function main() {
-  console.log('Seeding database...');
+// ─── 2 Recruiters ────────────────────────────────────────────
+const recruiters = [
+  {
+    user: {
+      name: 'Priya Mehta',
+      email: 'priya.mehta@talentscout.in',
+      image: null,
+    },
+    companyName: 'TalentScout India',
+    hasLifetimeAccess: true,
+    unlockedCandidateNames: ['Saurav Saini', 'Arbaaz Mansuri'],
+  },
+  {
+    user: {
+      name: 'James Whitfield',
+      email: 'james@branchrecruitment.co.uk',
+      image: null,
+    },
+    companyName: 'Branch Recruitment',
+    hasLifetimeAccess: false,
+    unlockedCandidateNames: ['Zack Adlington'],
+  },
+];
 
-  // Clear existing seed data — handle FK constraints
-  const seedCandidates = await prisma.candidate.findMany({
-    where: { email: { endsWith: '@example.com' } },
-    select: { id: true },
-  });
-  const seedIds = seedCandidates.map((c) => c.id);
-  if (seedIds.length > 0) {
-    await prisma.profileView.deleteMany({ where: { candidateId: { in: seedIds } } });
-    await prisma.unlock.deleteMany({ where: { candidateId: { in: seedIds } } });
-    await prisma.bid.deleteMany({ where: { candidateId: { in: seedIds } } });
-    await prisma.candidate.deleteMany({ where: { id: { in: seedIds } } });
+// ─── Main Seed Function ──────────────────────────────────────
+async function main() {
+  console.log('🧹 Cleaning up old seed data...');
+
+  // Wipe candidate-related data
+  await prisma.profileView.deleteMany({});
+  await prisma.unlock.deleteMany({});
+  await prisma.bid.deleteMany({});
+  await prisma.candidate.deleteMany({});
+
+  // Wipe recruiter seed accounts
+  for (const r of recruiters) {
+    const existing = await prisma.recruiter.findUnique({ where: { email: r.user.email } });
+    if (existing) await prisma.recruiter.delete({ where: { id: existing.id } });
+    const existingUser = await prisma.user.findUnique({ where: { email: r.user.email } });
+    if (existingUser) await prisma.user.delete({ where: { id: existingUser.id } });
   }
+
+  // ─── Seed Candidates ───────────────────────────────────────
+  console.log('🌱 Seeding 7 real-profile candidates (4 Indian + 3 Foreign)...');
+  const createdCandidates: Record<string, any> = {};
 
   for (let i = 0; i < candidates.length; i++) {
     const data = candidates[i];
-    const { status, rank, peakRank, profileViews, unlockCount, bidCount, daysListed, ...rest } =
-      data;
+    const {
+      status = 'active',
+      rank,
+      peakRank,
+      profileViews,
+      unlockCount,
+      bidCount,
+      daysListed,
+      bidHistory,
+      ...rest
+    } = data;
+
+    const candidateCreatedAt = new Date(Date.now() - daysListed * 86400 * 1000);
 
     const candidate = await prisma.candidate.create({
       data: {
@@ -332,27 +298,97 @@ async function main() {
         unlockCount,
         bidCount,
         daysListed,
-        createdAt: new Date(Date.now() - daysListed * 86400 * 1000),
+        createdAt: candidateCreatedAt,
       },
     });
 
-    // Create corresponding bid record
-    await prisma.bid.create({
-      data: {
-        candidateId: candidate.id,
-        amount: data.currentBid,
-        paymentId: `seed_bid_${i + 1}`,
-        createdAt: candidate.createdAt,
-      },
-    });
+    createdCandidates[candidate.name] = candidate;
+
+    // Create progressive bid history
+    for (let bIdx = 0; bIdx < bidHistory.length; bIdx++) {
+      const bidDate = new Date(
+        candidateCreatedAt.getTime() +
+          ((daysListed * 86400 * 1000) / (bidHistory.length + 1)) * (bIdx + 1)
+      );
+      await prisma.bid.create({
+        data: {
+          candidateId: candidate.id,
+          amount: bidHistory[bIdx],
+          paymentId: `seed_bid_${candidate.id}_${bIdx + 1}`,
+          createdAt: bidDate,
+        },
+      });
+    }
+
+    // Generate realistic profile views (capped to avoid noise)
+    const numViewsToCreate = Math.min(profileViews, 12);
+    for (let v = 0; v < numViewsToCreate; v++) {
+      const viewerHash = crypto
+        .createHash('sha256')
+        .update(`seed_viewer_${candidate.id}_${v}_${daysListed}`)
+        .digest('hex');
+      await prisma.profileView.create({
+        data: {
+          candidateId: candidate.id,
+          viewerHash,
+          createdAt: new Date(Date.now() - Math.random() * daysListed * 86400 * 1000),
+        },
+      });
+    }
+
+    console.log(
+      `  ✓ ${candidate.name} — #${rank} — $${(data.currentBid / 100).toFixed(2)} — ${data.category}`
+    );
   }
 
-  console.log(`Seeded ${candidates.length} candidates.`);
+  // ─── Seed Recruiters ───────────────────────────────────────
+  console.log('👤 Seeding 2 recruiters...');
+  for (let i = 0; i < recruiters.length; i++) {
+    const rData = recruiters[i];
+
+    const user = await prisma.user.create({
+      data: {
+        name: rData.user.name,
+        email: rData.user.email,
+        image: rData.user.image,
+        emailVerified: new Date(),
+      },
+    });
+
+    const recruiter = await prisma.recruiter.create({
+      data: {
+        userId: user.id,
+        email: user.email!,
+        companyName: rData.companyName,
+        hasLifetimeAccess: rData.hasLifetimeAccess,
+      },
+    });
+
+    // Create unlocks
+    for (const candName of rData.unlockedCandidateNames) {
+      const target = createdCandidates[candName];
+      if (target) {
+        await prisma.unlock.create({
+          data: {
+            recruiterId: recruiter.id,
+            candidateId: target.id,
+            paymentId: `seed_unlock_${recruiter.id}_${target.id}`,
+            unlockedAt: new Date(Date.now() - (i + 1) * 7200 * 1000),
+          },
+        });
+        console.log(`    ↳ ${rData.companyName} unlocked ${candName}`);
+      }
+    }
+
+    console.log(`  ✓ ${user.name} (${rData.companyName})`);
+  }
+
+  console.log('✅ Seeding completed successfully!');
 }
 
 main()
   .catch((err) => {
-    console.error(err);
+    console.error('Seeding error:', err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

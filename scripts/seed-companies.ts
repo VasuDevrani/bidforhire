@@ -2,39 +2,39 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const COMPANY_PRESETS: Record<string, { name: string; domain: string }[]> = {
-  'Mohan singh': [
-    { name: 'Stripe', domain: 'stripe.com' },
-    { name: 'Google', domain: 'google.com' },
+const COMPANY_PRESETS: Record<string, { name: string; domain?: string }[]> = {
+  'Saurav Saini': [
+    { name: 'Freelance / Consulting' },
+    { name: 'Open Source' },
   ],
-  'Sofia Martinez': [
-    { name: 'Figma', domain: 'figma.com' },
-    { name: 'Airbnb', domain: 'airbnb.com' },
+  'Arbaaz Mansuri': [
+    { name: 'Upside Down Pvt. Ltd.' },
+    { name: 'Codiotic Technologies' },
   ],
-  'monu singhal': [
-    { name: 'Uber', domain: 'uber.com' },
-    { name: 'Meta', domain: 'meta.com' },
+  'Zack Adlington': [
+    { name: 'Made Tech', domain: 'madetech.com' },
+    { name: 'Royal Navy' },
   ],
-  'Rachel Kim': [
-    { name: 'Spotify', domain: 'spotify.com' },
-    { name: 'DoorDash', domain: 'doordash.com' },
+  'Sudeep Shivashettar': [
+    { name: 'Acharya Institute of Technology' },
+    { name: 'Freelance' },
   ],
-  'Mohini': [
-    { name: 'Razorpay', domain: 'razorpay.com' },
-    { name: 'CRED', domain: 'cred.club' },
+  'David Timms': [
+    { name: 'Kaluza', domain: 'kaluza.com' },
   ],
-  'esfaef': [
-    { name: 'Netflix', domain: 'netflix.com' },
+  'Shanmugam R': [
+    { name: 'Freelance / Chennai Agencies' },
+  ],
+  'Tom Critchlow': [
+    { name: 'Independent Consulting' },
+    { name: 'Distilled', domain: 'distilled.net' },
   ],
 };
 
 const DEFAULT_POOL = [
-  [{ name: 'Google', domain: 'google.com' }, { name: 'Stripe', domain: 'stripe.com' }],
-  [{ name: 'Meta', domain: 'meta.com' }, { name: 'Uber', domain: 'uber.com' }],
-  [{ name: 'Figma', domain: 'figma.com' }, { name: 'Airbnb', domain: 'airbnb.com' }],
-  [{ name: 'Apple', domain: 'apple.com' }],
-  [{ name: 'Spotify', domain: 'spotify.com' }, { name: 'Razorpay', domain: 'razorpay.com' }],
-  [{ name: 'Netflix', domain: 'netflix.com' }],
+  [{ name: 'Freelance / Consulting' }],
+  [{ name: 'Small Startup' }],
+  [{ name: 'Agency Work' }],
 ];
 
 async function main() {
@@ -62,10 +62,13 @@ async function main() {
       },
     });
 
-    console.log(`✓ Updated ${c.name} (#${c.rank ?? i + 1}) ->`, companies.map((comp) => comp.name).join(', '));
+    console.log(
+      `✓ Updated ${c.name} (#${c.rank ?? i + 1}) ->`,
+      companies.map((comp) => comp.name).join(', ')
+    );
   }
 
-  console.log('✅ Done! All current candidates now have company logos.');
+  console.log('✅ Done! All current candidates now have company data.');
 }
 
 main()

@@ -33,13 +33,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const page = Number(searchParams.page) || 1;
   const categoryFilter = category || undefined;
 
-  const [session, leaderboard, stats, activity, globalTop3, allBids] = await Promise.all([
+  const [session, leaderboard, stats, activity, allBids] = await Promise.all([
     getServerSession(authOptions),
     getLeaderboard({ category: categoryFilter, timeframe, page }),
     getSiteStats(),
     getRecentActivity(10),
-    getLeaderboard({ page: 1, pageSize: 3 }), // always global all-time top 3 (ignores active filters)
-    getAllActiveBids(), // all active bid amounts for rank prediction in BidWidget
+    getAllActiveBids(),
   ]);
   const isRecruiter = !!session?.user;
 
@@ -133,8 +132,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             ) : (
               <>
                     {/* Podium — top 3 for the current filters */}
-                    {page === 1 && globalTop3.candidates.length >= 1 && (
-                      <TopPodium top3={globalTop3.candidates.slice(0, 3)} />
+                    {page === 1 && leaderboard.candidates.length >= 3 && (
+                      <TopPodium top3={leaderboard.candidates.slice(0, 3)} />
                     )}
 
               <div className="space-y-4">

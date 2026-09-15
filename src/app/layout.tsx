@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     'Candidates bid for visibility. Recruiters pay to unlock contact info. The open hiring leaderboard.',
   openGraph: { siteName: 'BidForHire', type: 'website' },
+  icons: { icon: '/favicon.svg' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
