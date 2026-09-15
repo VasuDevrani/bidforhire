@@ -1,0 +1,26 @@
+public/favicon.svg
+  s_99a184adba9942::t_9aeff4b8583109 1-12
+src/app/layout.tsx
+  s_99a184adba9942::t_a7983de9223e64 15
+prisma/seed.ts
+  s_99a184adba9942::t_f5dbc5fa2192df 55-56,58-59,61-63,65-77,79-81,83-84,86-87,89-106,109-110,112-113,115-116,118-120,122-135,138-139,141-142,144-145,147-149,151-162,165,168-169,171-172,174-176,178-189,192-193,195
+src/app/page.tsx
+  s_99a184adba9942::t_6d40f692e5ce97 36,136
+  s_99a184adba9942::t_a1644a285addaa 41,135
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "6d043db05eeda71b6766b1ac5b37324a7b1bf877",
+  "prompts": {},
+  "sessions": {
+    "s_99a184adba9942": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "478750",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
