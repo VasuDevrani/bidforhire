@@ -306,7 +306,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
         <div className="space-y-6 lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8">
           {/* 1. Recruiter Card: Direct Contact Info (if unlocked) OR Unlock CTA */}
           {contactInfo ? (
-            <div className="rounded-2xl border-2 border-foreground bg-emerald-50/70 p-6 shadow-pop">
+            <div className="rounded-2xl border-2 border-foreground bg-emerald-50/70 p-6">
               <div className="flex items-center gap-2 text-emerald-800 mb-2">
                 <CheckCircle2 className="h-5 w-5 shrink-0" />
                 <h2 className="font-display text-base font-black text-foreground">
@@ -346,7 +346,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               </div>
             </div>
           ) : (
-            <div className="rounded-2xl border-2 border-foreground bg-card p-6 shadow-pop">
+            <div className="rounded-2xl border-2 border-foreground bg-card p-6">
               <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
                 <Sparkles className="h-3.5 w-3.5 shrink-0" />
                 <span>For Recruiters & Hiring Managers</span>
@@ -377,7 +377,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
           )}
 
           {/* 2. Live Auction Status Card */}
-          <div className="rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop">
+          <div className="rounded-2xl border-2 border-foreground bg-card p-5">
             <div className="flex items-center justify-between border-b border-border pb-3.5 mb-3.5">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">

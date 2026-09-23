@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { prisma } from '@/lib/db';
 import { UNLOCK_PRICE_CENTS } from '@/lib/constants';
 import { Prisma } from '@prisma/client';
@@ -235,3 +236,32 @@ export async function getAllActiveBids(): Promise<number[]> {
   });
   return candidates.map((c) => c.currentBid);
 }
+
+// ─── High-Performance Cached Wrappers for 15s ISR ───────────────────────────
+// Caches read queries in-memory for 15 seconds to eliminate connection pool
+// pressure and easily support thousands of concurrent users on free tier.
+
+export const getCachedSiteStats = unstable_cache(
+  async () => getSiteStats(),
+  ['site-stats'],
+  { revalidate: 15, tags: ['site-stats'] }
+);
+
+export const getCachedRecentActivity = unstable_cache(
+  async (limit: number) => getRecentActivity(limit),
+  ['recent-activity'],
+  { revalidate: 15, tags: ['recent-activity'] }
+);
+
+export const getCachedActiveBids = unstable_cache(
+  async () => getAllActiveBids(),
+  ['all-active-bids'],
+  { revalidate: 15, tags: ['all-active-bids'] }
+);
+
+export const getCachedLeaderboard = unstable_cache(
+  async (category?: string, timeframe?: 'all' | 'week' | 'today', page?: number) =>
+    getLeaderboard({ category, timeframe, page }),
+  ['leaderboard-feed'],
+  { revalidate: 15, tags: ['leaderboard-feed'] }
+);

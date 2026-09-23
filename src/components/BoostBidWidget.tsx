@@ -127,7 +127,7 @@ export function BoostBidWidget({
   }
 
   return (
-    <div className="rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop">
+    <div className="rounded-2xl border-2 border-foreground bg-card p-5">
       {/* Header */}
       {collapsible ? (
         <button

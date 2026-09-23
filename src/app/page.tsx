@@ -2,7 +2,12 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { getLeaderboard, getSiteStats, getRecentActivity, getAllActiveBids } from '@/lib/candidates';
+import {
+  getCachedLeaderboard,
+  getCachedSiteStats,
+  getCachedRecentActivity,
+  getCachedActiveBids,
+} from '@/lib/candidates';
 import { LeaderboardRow } from '@/components/LeaderboardRow';
 import { TopPodium } from '@/components/TopPodium';
 import { BidWidget } from '@/components/BidWidget';
@@ -17,7 +22,7 @@ export const metadata: Metadata = {
   title: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
 };
 
-export const revalidate = 60;
+export const revalidate = 15;
 
 interface HomePageProps {
   searchParams: {
@@ -35,10 +40,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const [session, leaderboard, stats, activity, allBids] = await Promise.all([
     getServerSession(authOptions),
-    getLeaderboard({ category: categoryFilter, timeframe, page }),
-    getSiteStats(),
-    getRecentActivity(10),
-    getAllActiveBids(),
+    getCachedLeaderboard(categoryFilter, timeframe, page),
+    getCachedSiteStats(),
+    getCachedRecentActivity(10),
+    getCachedActiveBids(),
   ]);
   const isRecruiter = !!session?.user;
 
