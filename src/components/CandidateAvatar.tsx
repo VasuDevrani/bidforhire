@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Crown } from 'lucide-react';
 import { resolveAvatarUrl } from '@/lib/avatar';
 
@@ -11,32 +11,26 @@ interface CandidateAvatarProps {
   rank?: number | null;
 }
 
-/** Rank badge colours — shown bottom-right for #2 and #3 */
+/** Rank badge colours — shown bottom-right for #2 and #3 when rank is passed */
 const BADGE_STYLE: Record<number, string> = {
   2: 'bg-slate-200 text-slate-700 border-slate-300',
   3: 'bg-amber-200 text-amber-800 border-amber-300',
-};
-
-/** Ring / shadow per rank */
-const RING_STYLE: Record<number, string> = {
-  1: 'border-2 border-foreground shadow-pop-violet',
-  2: 'border-2 border-foreground shadow-pop-pink',
-  3: 'border-2 border-foreground shadow-pop-amber',
 };
 
 export function CandidateAvatar({ name, socialLinks, size, rank }: CandidateAvatarProps) {
   const primary = resolveAvatarUrl(name, socialLinks);
   const dicebear = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9`;
 
-  const [src, setSrc] = useState(primary);
+  const [imgSrc, setImgSrc] = useState(primary);
+
+  // Sync image URL whenever candidate name or social links update (e.g. category change)
+  useEffect(() => {
+    setImgSrc(primary);
+  }, [primary]);
 
   const handleError = () => {
-    if (src !== dicebear) setSrc(dicebear);
+    if (imgSrc !== dicebear) setImgSrc(dicebear);
   };
-
-  const ringClass = rank && RING_STYLE[rank]
-    ? RING_STYLE[rank]
-    : 'border-2 border-foreground shadow-pop-sm';
 
   return (
     <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
@@ -49,20 +43,21 @@ export function CandidateAvatar({ name, socialLinks, size, rank }: CandidateAvat
         />
       )}
 
-      {/* Avatar image */}
+      {/* Avatar image — clean border with no drop shadow */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={src}
+        key={primary}
+        src={imgSrc}
         alt={name}
         onError={handleError}
-        className={`rounded-full bg-muted object-cover transition-transform duration-300 group-hover:scale-110 ${ringClass}`}
+        className="rounded-full bg-muted object-cover border-2 border-foreground"
         style={{ width: size, height: size }}
       />
 
-      {/* Silver / bronze / other rank badge */}
-      {rank && rank > 1 && (
+      {/* Silver / bronze rank badge (only when rank is 2 or 3) */}
+      {rank && (rank === 2 || rank === 3) && (
         <span
-          className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-extrabold shadow-xs ${
+          className={`absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full border text-[10px] font-extrabold ${
             BADGE_STYLE[rank] ?? 'bg-white text-foreground border-foreground'
           }`}
         >

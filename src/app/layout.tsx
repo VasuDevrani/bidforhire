@@ -17,14 +17,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-background font-sans text-foreground">
+    <html lang="en" className="h-full bg-background">
+      <body className="flex min-h-full min-h-screen flex-col bg-background font-sans text-foreground">
         <NextTopLoader color="#7c3aed" height={3} showSpinner={false} shadow="0 0 10px #7c3aed,0 0 5px #7c3aed" />
         <Navbar />
-        <main>{children}</main>
+        <main className="flex-1">{children}</main>
 
         {/* ── Footer ─────────────────────────────────────────────── */}
-        <footer className="relative overflow-hidden border-t-2 border-border bg-foreground px-4 py-12 text-white">
+        <footer className="relative mt-auto overflow-hidden border-t-2 border-border bg-foreground px-4 py-12 pb-24 text-white lg:pb-12">
           {/* Big watermark */}
           <div
             aria-hidden

@@ -130,37 +130,21 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
   const socialLinks = candidate.socialLinks as Record<string, string>;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Top action bar */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href="/"
-          className="btn-pop inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-card px-4 py-2 font-display text-xs sm:text-sm font-bold text-foreground shadow-pop-sm transition-colors hover:bg-tertiary"
-        >
-          <ArrowLeft className="h-4 w-4 shrink-0" />
-          Back to leaderboard
-        </Link>
-
-        <div className="flex items-center gap-2">
-          <span className="rounded-full border-2 border-foreground bg-card px-3 py-1 font-display text-xs font-bold text-foreground shadow-pop-sm">
-            {candidate.category}
-          </span>
-          {rank && rankStyle && (
-            <span
-              className={`rounded-full border-2 border-foreground px-3.5 py-1 font-display text-xs font-black ${rankStyle.bg} ${rankStyle.text} ${rankStyle.shadow}`}
-            >
-              Leaderboard #{rank}
-            </span>
-          )}
-        </div>
-      </div>
+    <div className="mx-auto max-w-6xl px-4 pt-6 pb-16 sm:px-6 sm:pb-20 lg:px-8">
+      {/* Back to leaderboard */}
+      <Link
+        href="/"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back to leaderboard
+      </Link>
 
       {/* Main 2-column layout */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-start lg:gap-8">
         {/* LEFT COLUMN: Candidate Profile & Proof of Work */}
         <div className="space-y-6 lg:col-span-7 xl:col-span-8">
           {/* Hero Profile Card */}
-          <div className="rounded-2xl border-2 border-foreground bg-card p-6 sm:p-8 shadow-pop">
+          <div className="rounded-2xl border-2 border-foreground bg-card p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start gap-5">
               {/* Candidate Avatar with crown & rank ornamentation */}
               <div className="pt-1">
@@ -204,9 +188,6 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
                 {Array.isArray(candidate.previousCompanies) &&
                   (candidate.previousCompanies as unknown as CompanyInfo[]).length > 0 && (
                     <div className="mt-4 flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-1">
-                        Track record:
-                      </span>
                       {(candidate.previousCompanies as unknown as CompanyInfo[]).map((comp) => (
                         <span
                           key={comp.name}
@@ -253,7 +234,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               <div className="mt-6 border-t-2 border-foreground/10 pt-5">
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-1">
-                    Verified links:
+                    Links:
                   </span>
                   {Object.entries(socialLinks).map(([key, url]) => (
                     <a
@@ -261,7 +242,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-pop inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-background px-3.5 py-1.5 text-xs font-bold text-foreground shadow-pop-sm hover:bg-accent hover:text-white hover:border-foreground capitalize transition-all"
+                      className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-background px-3.5 py-1.5 text-xs font-bold text-foreground capitalize"
                     >
                       <SocialIcon network={key} />
                       {key}
@@ -309,10 +290,24 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
             </div>
           </div>
 
-          {/* Unlocked Contact Details (Shows when already unlocked) */}
-          {contactInfo && (
+          {/* 3. Candidate Boost Console */}
+          <BoostBidWidget
+            candidateId={params.id}
+            candidateName={candidate.name.split(' ')[0]}
+            currentBidCents={candidate.currentBid}
+            topBidCents={topBidCents}
+            currentRank={candidate.rank}
+            collapsible={true}
+            defaultOpen={false}
+          />
+        </div>
+
+        {/* RIGHT COLUMN: Recruiter Actions & Live Auction Console */}
+        <div className="space-y-6 lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8">
+          {/* 1. Recruiter Card: Direct Contact Info (if unlocked) OR Unlock CTA */}
+          {contactInfo ? (
             <div className="rounded-2xl border-2 border-foreground bg-emerald-50/70 p-6 shadow-pop">
-              <div className="flex items-center gap-2 text-emerald-800 mb-3">
+              <div className="flex items-center gap-2 text-emerald-800 mb-2">
                 <CheckCircle2 className="h-5 w-5 shrink-0" />
                 <h2 className="font-display text-base font-black text-foreground">
                   Direct Contact Info (Unlocked ✓)
@@ -322,7 +317,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
                 Reach out to {candidate.name} directly. There are no platform recruiter fees or commissions.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <div className="space-y-2.5 text-sm">
                 <div className="flex items-center gap-3 rounded-xl border-2 border-foreground/15 bg-background p-3.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/15 text-accent border border-accent/30">
                     <Mail className="h-4 w-4" />
@@ -350,13 +345,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
                 )}
               </div>
             </div>
-          )}
-        </div>
-
-        {/* RIGHT COLUMN: Recruiter Actions & Live Auction Console */}
-        <div className="space-y-6 lg:col-span-5 xl:col-span-4 lg:sticky lg:top-8">
-          {/* 1. Recruiter Unlock Card (If not unlocked) */}
-          {!contactInfo && (
+          ) : (
             <div className="rounded-2xl border-2 border-foreground bg-card p-6 shadow-pop">
               <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold text-accent">
                 <Sparkles className="h-3.5 w-3.5 shrink-0" />
@@ -366,9 +355,6 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               <h2 className="font-display text-xl font-black text-foreground">
                 Want to reach {candidate.name}?
               </h2>
-              <p className="mt-1 mb-4 text-xs leading-relaxed text-muted-foreground">
-                Unlock direct contact info (email & phone). Interview and hire with zero placement fees.
-              </p>
 
               <UnlockButton
                 candidateId={params.id}
@@ -399,7 +385,7 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
                   <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
                 </span>
                 <span className="font-display text-xs font-black uppercase tracking-wider text-foreground">
-                  Auction Status
+                  Status
                 </span>
               </div>
               <span className="rounded-full border border-foreground/20 bg-muted px-2.5 py-0.5 text-xs font-bold text-foreground">
@@ -443,17 +429,6 @@ export default async function CandidatePage({ params }: CandidatePageProps) {
               </div>
             )}
           </div>
-
-          {/* 3. Candidate Boost Console (collapsible drawer for clean dual-audience UX) */}
-          <BoostBidWidget
-            candidateId={params.id}
-            candidateName={candidate.name.split(' ')[0]}
-            currentBidCents={candidate.currentBid}
-            topBidCents={topBidCents}
-            currentRank={candidate.rank}
-            collapsible={true}
-            defaultOpen={false}
-          />
         </div>
       </div>
     </div>
@@ -483,7 +458,7 @@ function StatCard({
 
   return (
     <div
-      className={`rounded-2xl border-2 border-foreground ${c.bg} p-4 shadow-pop-sm transition-all hover:translate-y-[-2px]`}
+      className={`rounded-2xl ${c.bg} p-4 transition-all hover:translate-y-[-2px]`}
     >
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">

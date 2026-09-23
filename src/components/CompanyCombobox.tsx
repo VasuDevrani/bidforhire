@@ -97,7 +97,7 @@ export function CompanyCombobox({
           {value.map((comp, idx) => (
             <span
               key={comp.name}
-              className="inline-flex items-center gap-1.5 rounded-full border-2 border-foreground bg-card py-1 pl-2 pr-2.5 text-xs font-bold text-foreground shadow-pop-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-card py-1 pl-2 pr-2.5 text-xs font-bold text-foreground shadow-pop-sm"
             >
               <CompanyLogo company={comp} size={14} showNameTooltip={false} />
               <span>{comp.name}</span>

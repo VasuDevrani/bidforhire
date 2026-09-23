@@ -189,14 +189,14 @@ export async function getRecentActivity(limit = 10) {
       orderBy: { createdAt: 'desc' },
       take: limit,
       include: {
-        candidate: { select: { name: true, role: true, id: true } },
+        candidate: { select: { name: true, role: true, id: true, socialLinks: true } },
       },
     }),
     prisma.unlock.findMany({
       orderBy: { unlockedAt: 'desc' },
       take: limit,
       include: {
-        candidate: { select: { name: true, role: true, id: true } },
+        candidate: { select: { name: true, role: true, id: true, socialLinks: true } },
       },
     }),
   ]);
@@ -207,6 +207,7 @@ export async function getRecentActivity(limit = 10) {
       candidateId: b.candidateId,
       candidateName: b.candidate.name,
       candidateRole: b.candidate.role,
+      candidateSocialLinks: (b.candidate.socialLinks ?? {}) as Record<string, string>,
       amountCents: b.amount,
       createdAt: b.createdAt,
     })),
@@ -215,6 +216,7 @@ export async function getRecentActivity(limit = 10) {
       candidateId: u.candidateId,
       candidateName: u.candidate.name,
       candidateRole: u.candidate.role,
+      candidateSocialLinks: (u.candidate.socialLinks ?? {}) as Record<string, string>,
       amountCents: UNLOCK_PRICE_CENTS,
       createdAt: u.unlockedAt,
     })),

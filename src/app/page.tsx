@@ -207,10 +207,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 </div>
 
               {/* Activity feed */}
-              <div className="rounded-xl border-2 border-border bg-card p-4 shadow-pop-sm">
-                <h2 className="mb-3 font-display text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
-                  Live Activity ⚡
-                </h2>
+              <div className="rounded-2xl bg-card p-4 sm:p-5">
+                <div className="mb-3 flex items-center gap-2 border-b border-border pb-2.5">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <h2 className="font-display text-xs font-black uppercase tracking-wider text-foreground">
+                    Live Activity ⚡
+                  </h2>
+                </div>
                 <ActivityFeed activities={activity} />
               </div>
             </div>

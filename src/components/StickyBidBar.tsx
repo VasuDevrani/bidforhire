@@ -55,7 +55,7 @@ export function StickyBidBar({ topBidCents, allBidsCents }: StickyBidBarProps) {
 
   return (
     /* Only visible on screens smaller than lg — the sidebar BidWidget covers lg+ */
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card shadow-[0_-2px_12px_rgba(0,0,0,0.08)] lg:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t-2 border-foreground bg-card shadow-[0_-2px_12px_rgba(0,0,0,0.08)] lg:hidden">
       <div className="mx-auto max-w-xl px-4 py-3">
         <div className="flex items-center gap-2">
           {/* Rank badge */}

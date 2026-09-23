@@ -276,17 +276,13 @@ export function BoostBidWidget({
           {/* Footer context */}
           <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
             <span>
-              Current bid: <strong className="text-foreground">${currentBidDollars}</strong>
-            </span>
-            <span>·</span>
-            <span>
               #1 Bid: <strong className="text-foreground">${topBidDollars}</strong>
             </span>
             {currentRank && (
               <>
                 <span>·</span>
                 <span>
-                  Rank: <strong className="text-foreground">#{currentRank}</strong>
+                  Your Rank: <strong className="text-foreground">#{currentRank}</strong>
                 </span>
               </>
             )}
