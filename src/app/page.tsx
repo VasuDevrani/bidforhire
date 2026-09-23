@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
+  title: 'BidForHire - Claim a rank on Hiring Leaderboard',
 };
 
 export const revalidate = 15;
