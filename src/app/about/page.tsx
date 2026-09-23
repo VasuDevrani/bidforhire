@@ -14,7 +14,7 @@ const sections = [
       <p className="text-muted-foreground leading-relaxed">
         BidForHire is a pay-to-rank hiring leaderboard that flips the traditional job board
         model. Instead of recruiters blasting candidates with cold messages, candidates bid
-        for visibility and serious recruiters pay to unlock contact details - creating a
+        for visibility and serious recruiters pay once unlock contact details - creating a
         market where attention is earned, not spammed.
       </p>
     ),
