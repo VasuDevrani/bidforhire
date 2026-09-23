@@ -40,7 +40,7 @@ export function CompanyCombobox({
           c.name.toLowerCase().includes(query.toLowerCase()) ||
           c.domain?.toLowerCase().includes(query.toLowerCase())
       ).filter((c) => !selectedNames.has(c.name.toLowerCase()))
-    : POPULAR_COMPANIES.filter((c) => !selectedNames.has(c.name.toLowerCase())).slice(0, 8);
+    : POPULAR_COMPANIES.filter((c) => !selectedNames.has(c.name.toLowerCase()));
 
   const exactMatchExists = POPULAR_COMPANIES.some(
     (c) => c.name.toLowerCase() === query.trim().toLowerCase()
@@ -50,7 +50,6 @@ export function CompanyCombobox({
     if (value.length >= max) return;
     onChange([...value, company]);
     setQuery('');
-    setIsOpen(false);
   }
 
   function handleRemove(index: number) {
@@ -97,7 +96,7 @@ export function CompanyCombobox({
           {value.map((comp, idx) => (
             <span
               key={comp.name}
-              className="inline-flex items-center gap-1.5 rounded-full bg-card py-1 pl-2 pr-2.5 text-xs font-bold text-foreground shadow-pop-sm"
+              className="inline-flex items-center gap-1.5 rounded-full bg-card py-1 pl-2 pr-2.5 text-xs font-bold text-foreground"
             >
               <CompanyLogo company={comp} size={14} showNameTooltip={false} />
               <span>{comp.name}</span>
@@ -131,12 +130,12 @@ export function CompanyCombobox({
                 ? 'Type or select past companies (e.g. Google, Stripe...)'
                 : 'Add another company...'
             }
-            className="w-full rounded-xl border-2 border-foreground bg-card px-4 py-2.5 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 shadow-pop focus:outline-none focus:ring-2 focus:ring-accent"
+            className="w-full rounded-xl border-2 border-foreground bg-card px-4 py-2.5 text-sm font-medium text-foreground placeholder:text-muted-foreground/60 focus:outline-none"
           />
 
           {/* Autocomplete Dropdown */}
           {isOpen && (
-            <div className="absolute left-0 right-0 z-50 mt-2 max-h-60 overflow-y-auto rounded-xl border-2 border-foreground bg-card p-1 shadow-pop">
+            <div className="absolute left-0 right-0 z-50 mt-2 max-h-64 overflow-y-auto rounded-xl border-2 border-foreground bg-card p-1 shadow-lg">
               {filtered.map((comp) => (
                 <button
                   key={comp.name}

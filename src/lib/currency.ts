@@ -125,7 +125,7 @@ export async function usdCentsToRazorpay(
   targetCurrency: string,
 ): Promise<{ amount: number; currency: string }> {
   if (targetCurrency === 'USD') {
-    return { amount: usdCents, currency: 'USD' };
+    return { amount: Math.max(usdCents, 100), currency: 'USD' };
   }
 
   let rates: Record<string, number>;
@@ -133,18 +133,32 @@ export async function usdCentsToRazorpay(
     rates = await fetchUsdRates();
   } catch (err) {
     console.warn('[currency] Exchange rate fetch failed, falling back to USD:', err);
-    return { amount: usdCents, currency: 'USD' };
+    return { amount: Math.max(usdCents, 100), currency: 'USD' };
   }
 
   const rate = rates[targetCurrency];
   if (!rate) {
     console.warn(`[currency] No rate for "${targetCurrency}", falling back to USD`);
-    return { amount: usdCents, currency: 'USD' };
+    return { amount: Math.max(usdCents, 100), currency: 'USD' };
   }
 
   const usdMajor = usdCents / 100;
   const targetMajor = usdMajor * rate;
-  const targetSmallest = Math.round(targetMajor * currencyMultiplier(targetCurrency));
+  let targetSmallest = Math.round(targetMajor * currencyMultiplier(targetCurrency));
+
+  // Razorpay subunit formatting and minimum thresholds:
+  if (THREE_DECIMAL.has(targetCurrency)) {
+    // Razorpay requires the last digit to be 0 for three-decimal currencies (e.g. KWD, BHD, OMR)
+    targetSmallest = Math.round(targetSmallest / 10) * 10;
+    targetSmallest = Math.max(targetSmallest, 100);
+  } else if (ZERO_DECIMAL.has(targetCurrency)) {
+    // Zero-decimal currencies (e.g. JPY, KRW)
+    targetSmallest = Math.max(targetSmallest, 50);
+  } else {
+    // Standard 2-decimal currencies (EUR, GBP, INR, USD, CAD, AUD, etc.)
+    // Must be at least 100 subunits (e.g. £1.00, €1.00, ₹1.00) to satisfy Razorpay's minimum order requirement.
+    targetSmallest = Math.max(targetSmallest, 100);
+  }
 
   return { amount: targetSmallest, currency: targetCurrency };
 }

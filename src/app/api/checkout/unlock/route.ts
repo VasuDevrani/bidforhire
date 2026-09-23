@@ -89,8 +89,10 @@ export async function POST(req: NextRequest) {
       keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? process.env.RAZORPAY_KEY_ID,
       candidateId,
     });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('[checkout/unlock]', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const rzpErr = err as { statusCode?: number; error?: { description?: string }; message?: string };
+    const errorMessage = rzpErr?.error?.description || rzpErr?.message || 'Internal server error';
+    return NextResponse.json({ error: errorMessage }, { status: rzpErr?.statusCode || 500 });
   }
 }

@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background:  '#FFFDF5',
+        background:  '#F8FAFC',
         foreground:  '#1E293B',
         muted: {
           DEFAULT:    '#F1F5F9',
@@ -29,9 +29,9 @@ const config: Config = {
         ring:        '#8B5CF6',
         // legacy aliases kept so other pages don't break
         bg: {
-          DEFAULT:      '#FFFDF5',
+          DEFAULT:      '#F8FAFC',
           card:         '#FFFFFF',
-          'card-hover': '#F8FAFC',
+          'card-hover': '#F1F5F9',
         },
       },
       fontFamily: {
