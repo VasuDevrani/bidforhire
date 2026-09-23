@@ -1,0 +1,23 @@
+prisma/seed.ts
+  s_3bb2c316034492::t_4a197c7098478e 49,56,77,84,106,113,135,142,162,169,189,196,218,225
+src/app/api/checkout/callback/route.ts
+  s_3bb2c316034492::t_298dbeffa1af9c 92,95
+src/lib/payment-verification.ts
+  s_3bb2c316034492::t_2dd562e8d6e274 139-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "3426fa3738101ca3d6e17e919752daeec2869fba",
+  "prompts": {},
+  "sessions": {
+    "s_3bb2c316034492": {
+      "agent_id": {
+        "tool": "DeputyDev",
+        "id": "482356",
+        "model": "CLAUDE_4_POINT_6_SONNET"
+      },
+      "human_author": "vasudevrani1 <vasu.devrani@1mg.com>"
+    }
+  }
+}
