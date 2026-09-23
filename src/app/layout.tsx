@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: '%s | BidForHire',
   },
   description:
-    'Candidates bid for visibility. Recruiters pay once unlock to contact info. The open hiring leaderboard.',
+    'Candidates bid for visibility. Recruiters pay once to unlock contact info. The open hiring leaderboard.',
   openGraph: { siteName: 'BidForHire', type: 'website' },
   icons: { icon: '/favicon.svg' },
 };
