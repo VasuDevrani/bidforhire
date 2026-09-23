@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { BackToLeaderboard } from '@/components/BackToLeaderboard';
 
-export const metadata: Metadata = { title: 'Terms of Service — BidForHire' };
+export const metadata: Metadata = { title: 'Terms of Service - BidForHire' };
 
 const sections = [
   {

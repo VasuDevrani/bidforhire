@@ -129,7 +129,7 @@ export function BoostBidWidget({
 
       const ready = await loadRazorpayCheckout();
       if (!ready) {
-        toast.error('Could not load payment gateway — please try again.');
+        toast.error('Could not load payment gateway - please try again.');
         setLoading(false);
         return;
       }
@@ -147,6 +147,8 @@ export function BoostBidWidget({
         redirect: true,
         theme: { color: '#6366f1' },
         modal: {
+          confirm_close: false,
+          handleback: true,
           ondismiss: async () => {
             // Check if webhook already completed the payment while user was in Paytm
             const done = await checkPaymentStatus(newAmountCents);
@@ -176,10 +178,15 @@ export function BoostBidWidget({
             }
             window.location.href = `/candidate/${data.candidateId}?boosted=1`;
           } catch {
-            toast.error('Verification failed — if you were charged, contact support.');
+            toast.error('Verification failed - if you were charged, contact support.');
             setLoading(false);
           }
         },
+      });
+
+      rzp.on('payment.failed', (response: any) => {
+        setLoading(false);
+        toast.error(response?.error?.description || 'Payment was cancelled or failed.');
       });
 
       rzp.open();
@@ -236,7 +243,7 @@ export function BoostBidWidget({
           <p className="mb-3 text-xs text-muted-foreground">
             {isLeader
               ? "You're currently holding #1! Add more to lock in your top spot."
-              : 'Enter a top-up amount — you only pay the incremental difference.'}
+              : 'Enter a top-up amount - you only pay the incremental difference.'}
           </p>
 
           {/* Quick preset buttons */}
@@ -327,7 +334,7 @@ export function BoostBidWidget({
                   </span>
                 ) : (
                   <span className="text-muted-foreground">
-                    {currentRank ? `#${currentRank}` : '—'}
+                    {currentRank ? `#${currentRank}` : '-'}
                   </span>
                 )}
               </div>

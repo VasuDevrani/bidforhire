@@ -167,6 +167,8 @@ export function UnlockButton({
         redirect: true,
         theme: { color: '#6366f1' },
         modal: {
+          confirm_close: false,
+          handleback: true,
           ondismiss: async () => {
             try {
               const res = await fetch(`/api/checkout/status?flow=unlock&candidateId=${candidateId}`);
@@ -202,6 +204,11 @@ export function UnlockButton({
             setLoading(false);
           }
         },
+      });
+
+      rzp.on('payment.failed', (response: any) => {
+        setLoading(false);
+        toast.error(response?.error?.description || 'Payment was cancelled or failed.');
       });
 
       rzp.open();

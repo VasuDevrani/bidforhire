@@ -46,7 +46,7 @@ export function RecruiterSignupForm({ callbackUrl = '/recruiter/dashboard' }: Re
         setSent(true);
       }
     } catch {
-      toast.error('Network error — please try again');
+      toast.error('Network error - please try again');
     } finally {
       setLoading(false);
     }

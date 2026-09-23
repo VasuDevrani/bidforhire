@@ -165,6 +165,8 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
         prefill: { name: form.name, email: form.email },
         theme: { color: '#6366f1' },
         modal: {
+          confirm_close: false,
+          handleback: true,
           ondismiss: async () => {
             if (data.candidateId) {
               try {
@@ -207,6 +209,11 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
             setLoading(false);
           }
         },
+      });
+
+      rzp.on('payment.failed', (response: any) => {
+        setLoading(false);
+        toast.error(response?.error?.description || 'Payment was cancelled or failed.');
       });
 
       rzp.open();

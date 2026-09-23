@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { CheckCircle2, ExternalLink, LayoutList } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Listing Submitted — BidForHire',
+  title: 'Listing Submitted - BidForHire',
 };
 
 interface SuccessPageProps {

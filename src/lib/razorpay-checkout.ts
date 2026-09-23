@@ -39,7 +39,12 @@ export interface RazorpayCheckoutOptions {
   prefill?: { name?: string; email?: string; contact?: string };
   notes?: Record<string, string>;
   theme?: { color?: string };
-  modal?: { ondismiss?: () => void; confirm_close?: boolean };
+  modal?: {
+    ondismiss?: () => void;
+    confirm_close?: boolean;
+    handleback?: boolean;
+    escape?: boolean;
+  };
   handler?: (response: RazorpayHandlerResponse) => void;
   callback_url?: string;
   redirect?: boolean;
@@ -47,8 +52,13 @@ export interface RazorpayCheckoutOptions {
 
 // ── Global type augmentation ───────────────────────────────────────────────
 
+export interface RazorpayInstance {
+  open: () => void;
+  on: (event: string, callback: (response: any) => void) => void;
+}
+
 declare global {
   interface Window {
-    Razorpay: new (options: RazorpayCheckoutOptions) => { open: () => void };
+    Razorpay: new (options: RazorpayCheckoutOptions) => RazorpayInstance;
   }
 }

@@ -40,7 +40,7 @@ const sections: SectionDef[] = [
         BidForHire is a public hiring leaderboard. Candidates pay a one-time bid for visibility;
         recruiters pay a one-time fee to unlock contact details. There are no ads, subscriptions,
         revenue shares, or guaranteed hiring outcomes. A candidate&apos;s rank is determined by
-        their confirmed bid amount—nothing else.
+        their confirmed bid amount - nothing else.
       </p>
     ),
   },
@@ -62,7 +62,7 @@ const sections: SectionDef[] = [
             'New bids must be whole US dollars: $10 minimum and $999,999 maximum.',
             'To take #1, a new bid must be at least $5 above the current #1 bid.',
             'A bid below #1 can still be listed at the position that its amount earns.',
-            'A completed payment—not a checkout session or redirect—is what claims a rank.',
+            'A completed payment - not a checkout session or redirect - is what claims a rank.',
             'Listings remain active unless removed under these rules or applicable law.',
           ].map((item) => (
             <RuleItem key={item} color="text-accent" text={item} />

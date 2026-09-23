@@ -6,7 +6,7 @@ import { prisma } from '@/lib/db';
 import { formatCents } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Get Listed — BidForHire',
+  title: 'Get Listed - BidForHire',
   description: 'Submit your profile and bid for the top spot on the BidForHire leaderboard.',
 };
 
