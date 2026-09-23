@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { TrendingUp, ArrowRight, ChevronDown, ChevronUp, Zap } from 'lucide-react';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
+import { toast } from '@/components/Toast';
 
 interface BoostBidWidgetProps {
   candidateId: string;
@@ -33,11 +34,62 @@ export function BoostBidWidget({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [topUp, setTopUp] = useState<string>('1');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const targetBidRef = useRef<number>(0);
 
   const topUpDollars = parseInt(topUp, 10);
   const isValidTopUp = !isNaN(topUpDollars) && topUpDollars >= 1;
   const newTotalDollars = isValidTopUp ? currentBidDollars + topUpDollars : null;
+
+  async function checkPaymentStatus(targetBid: number): Promise<boolean> {
+    if (!targetBid) return false;
+    try {
+      const res = await fetch(
+        `/api/checkout/status?flow=boost&candidateId=${candidateId}&minBid=${targetBid}`
+      );
+      if (!res.ok) return false;
+      const json = await res.json();
+      return !!json.completed;
+    } catch {
+      return false;
+    }
+  }
+
+  // Poll in background and listen for visibility changes when user switches back from UPI/Paytm apps
+  useEffect(() => {
+    if (!loading) return;
+
+    let pollCount = 0;
+    const interval = setInterval(async () => {
+      pollCount++;
+      const done = await checkPaymentStatus(targetBidRef.current);
+      if (done) {
+        clearInterval(interval);
+        window.location.href = `/candidate/${candidateId}?boosted=1`;
+      }
+      if (pollCount > 20) {
+        clearInterval(interval);
+      }
+    }, 2000);
+
+    const onVisible = async () => {
+      if (document.visibilityState === 'visible') {
+        const done = await checkPaymentStatus(targetBidRef.current);
+        if (done) {
+          clearInterval(interval);
+          window.location.href = `/candidate/${candidateId}?boosted=1`;
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onVisible);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onVisible);
+    };
+  }, [loading, candidateId]);
 
   // Will they overtake the current #1?
   const willClaimTop1 =
@@ -52,14 +104,14 @@ export function BoostBidWidget({
   const dollarsToOvertakeFromCurrent = !isLeader ? topBidDollars + 1 - currentBidDollars : 0;
 
   async function handleBoost() {
-    setError(null);
     if (!isValidTopUp) {
-      setError('Top-up must be at least $1');
+      toast.error('Top-up must be at least $1');
       return;
     }
 
     // The API still expects the new total (newAmountCents); we compute it here.
     const newAmountCents = newTotalDollars! * 100;
+    targetBidRef.current = newAmountCents;
 
     setLoading(true);
     try {
@@ -70,14 +122,14 @@ export function BoostBidWidget({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Something went wrong');
+        toast.error(data.error ?? 'Something went wrong');
         setLoading(false);
         return;
       }
 
       const ready = await loadRazorpayCheckout();
       if (!ready) {
-        setError('Could not load payment gateway — please try again.');
+        toast.error('Could not load payment gateway — please try again.');
         setLoading(false);
         return;
       }
@@ -92,8 +144,19 @@ export function BoostBidWidget({
         description: `Top-up $${topUpDollars} → new bid $${newTotalDollars}`,
         order_id: data.orderId,
         callback_url: callbackUrl,
+        redirect: true,
         theme: { color: '#6366f1' },
-        modal: { ondismiss: () => setLoading(false) },
+        modal: {
+          ondismiss: async () => {
+            // Check if webhook already completed the payment while user was in Paytm
+            const done = await checkPaymentStatus(newAmountCents);
+            if (done) {
+              window.location.href = `/candidate/${candidateId}?boosted=1`;
+              return;
+            }
+            setLoading(false);
+          },
+        },
         handler: async (response) => {
           try {
             const verifyRes = await fetch('/api/checkout/verify', {
@@ -107,13 +170,13 @@ export function BoostBidWidget({
             });
             const verifyData = await verifyRes.json();
             if (!verifyRes.ok || !verifyData.success) {
-              setError(verifyData.error || 'Payment verification failed. Contact support.');
+              toast.error(verifyData.error || 'Payment verification failed. Contact support.');
               setLoading(false);
               return;
             }
             window.location.href = `/candidate/${data.candidateId}?boosted=1`;
           } catch {
-            setError('Verification failed — if you were charged, contact support.');
+            toast.error('Verification failed — if you were charged, contact support.');
             setLoading(false);
           }
         },
@@ -121,7 +184,7 @@ export function BoostBidWidget({
 
       rzp.open();
     } catch {
-      setError('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
       setLoading(false);
     }
   }
@@ -232,8 +295,6 @@ export function BoostBidWidget({
               {loading ? 'Loading…' : <span className="flex items-center gap-1.5">Boost <ArrowRight className="h-3.5 w-3.5 shrink-0" /></span>}
             </button>
           </div>
-
-          {error && <p className="mt-2 text-xs font-medium text-red-500">{error}</p>}
 
           {/* Breakdown — only shown when input is valid */}
           {isValidTopUp && newTotalDollars !== null && (

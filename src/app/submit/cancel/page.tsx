@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { ArrowLeft, RotateCcw } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Payment Cancelled — BidForHire',
+  title: 'Payment Cancelled - BidForHire',
 };
 
 export default function SubmitCancelPage() {

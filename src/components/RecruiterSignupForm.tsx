@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { isWorkEmail } from '@/lib/utils';
 import { Mail, ArrowRight } from 'lucide-react';
+import { toast } from '@/components/Toast';
 
 interface RecruiterSignupFormProps {
   callbackUrl?: string;
@@ -14,14 +15,12 @@ export function RecruiterSignupForm({ callbackUrl = '/recruiter/dashboard' }: Re
   const [companyName, setCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError('');
 
     if (!isWorkEmail(email)) {
-      setError('Please use a work email address (no Gmail, Yahoo, etc.)');
+      toast.error('Please use a work email address (no Gmail, Yahoo, etc.)');
       return;
     }
 
@@ -42,12 +41,12 @@ export function RecruiterSignupForm({ callbackUrl = '/recruiter/dashboard' }: Re
       });
 
       if (result?.error) {
-        setError('Failed to send magic link. Check your email configuration.');
+        toast.error('Failed to send magic link. Check your email configuration.');
       } else {
         setSent(true);
       }
     } catch {
-      setError('Network error — please try again');
+      toast.error('Network error — please try again');
     } finally {
       setLoading(false);
     }
@@ -71,11 +70,6 @@ export function RecruiterSignupForm({ callbackUrl = '/recruiter/dashboard' }: Re
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && (
-        <div className="rounded-xl border-2 border-red-400 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
-          {error}
-        </div>
-      )}
 
       <div>
         <label className="mb-1.5 block text-sm font-bold text-foreground">

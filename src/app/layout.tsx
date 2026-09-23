@@ -3,6 +3,7 @@ import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import Link from 'next/link';
 import NextTopLoader from 'nextjs-toploader';
+import { ToastContainer } from '@/components/Toast';
 
 export const metadata: Metadata = {
   title: {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NextTopLoader color="#7c3aed" height={3} showSpinner={false} shadow="0 0 10px #7c3aed,0 0 5px #7c3aed" />
         <Navbar />
         <main className="flex-1">{children}</main>
+        <ToastContainer />
 
         {/* ── Footer ─────────────────────────────────────────────── */}
         <footer className="relative mt-auto overflow-hidden border-t-2 border-border bg-foreground px-4 py-12 pb-24 text-white lg:pb-12">

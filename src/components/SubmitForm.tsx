@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES } from '@/lib/constants';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 import { CompanyCombobox } from './CompanyCombobox';
 import { type CompanyInfo } from '@/lib/companies';
+import { toast } from '@/components/Toast';
 
 const SOCIAL_FIELDS = [
   { key: 'linkedin', label: 'LinkedIn URL', placeholder: 'https://linkedin.com/in/...' },
@@ -36,7 +37,53 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
     bidDollars: String(Math.max(initialMinBid, 1)),
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(initialError || '');
+  const [pendingCandidateId, setPendingCandidateId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialError) {
+      toast.error(initialError);
+    }
+  }, [initialError]);
+
+  useEffect(() => {
+    if (!loading || !pendingCandidateId) return;
+
+    let pollCount = 0;
+    const interval = setInterval(async () => {
+      pollCount++;
+      try {
+        const res = await fetch(`/api/checkout/status?flow=submit&candidateId=${pendingCandidateId}`);
+        const data = await res.json();
+        if (data.completed) {
+          clearInterval(interval);
+          window.location.href = `/submit/success?candidateId=${pendingCandidateId}`;
+        }
+      } catch {}
+      if (pollCount > 20) clearInterval(interval);
+    }, 2000);
+
+    const onVisible = async () => {
+      if (document.visibilityState === 'visible') {
+        try {
+          const res = await fetch(`/api/checkout/status?flow=submit&candidateId=${pendingCandidateId}`);
+          const data = await res.json();
+          if (data.completed) {
+            clearInterval(interval);
+            window.location.href = `/submit/success?candidateId=${pendingCandidateId}`;
+          }
+        } catch {}
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onVisible);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onVisible);
+    };
+  }, [loading, pendingCandidateId]);
 
   function set(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -44,11 +91,10 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError('');
 
     const bidDollars = parseInt(form.bidDollars, 10);
     if (!bidDollars || bidDollars < 1 || bidDollars > 999_999) {
-      setError('Bid must be between $1 and $999,999');
+      toast.error('Bid must be between $1 and $999,999');
       return;
     }
 
@@ -58,7 +104,7 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
       .filter(Boolean);
 
     if (skills.length === 0) {
-      setError('Please enter at least one skill');
+      toast.error('Please enter at least one skill');
       return;
     }
 
@@ -90,15 +136,17 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Something went wrong');
+        toast.error(data.error || 'Something went wrong');
         setLoading(false);
         return;
       }
 
+      setPendingCandidateId(data.candidateId);
+
       // Step 2: load Razorpay checkout.js and open the modal
       const ready = await loadRazorpayCheckout();
       if (!ready) {
-        setError('Could not load payment gateway — please check your connection and try again.');
+        toast.error('Could not load payment gateway - please check your connection and try again.');
         setLoading(false);
         return;
       }
@@ -110,15 +158,28 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
         amount: data.amount,
         currency: data.currency,
         name: 'BidForHire',
-        description: `Bid $${bidDollars} — get listed`,
+        description: `Bid $${bidDollars} - get listed`,
         order_id: data.orderId,
         callback_url: callbackUrl,
+        redirect: true,
         prefill: { name: form.name, email: form.email },
         theme: { color: '#6366f1' },
         modal: {
-          ondismiss: () => {
+          ondismiss: async () => {
+            if (data.candidateId) {
+              try {
+                const res = await fetch(
+                  `/api/checkout/status?flow=submit&candidateId=${data.candidateId}`
+                );
+                const statusData = await res.json();
+                if (statusData.completed) {
+                  window.location.href = `/submit/success?candidateId=${data.candidateId}`;
+                  return;
+                }
+              } catch {}
+            }
             setLoading(false);
-            setError("Payment was cancelled. Your draft has been saved — try again whenever you're ready.");
+            toast.error("Payment was cancelled. Your draft has been saved - try again whenever you're ready.");
           },
         },
         handler: async (response) => {
@@ -135,14 +196,14 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
             });
             const verifyData = await verifyRes.json();
             if (!verifyRes.ok || !verifyData.success) {
-              setError(verifyData.error || 'Payment verification failed. Contact support.');
+              toast.error(verifyData.error || 'Payment verification failed. Contact support.');
               setLoading(false);
               return;
             }
             // Redirect to success page
             window.location.href = `/submit/success?candidateId=${data.candidateId}`;
           } catch {
-            setError('Verification failed — if you were charged, contact support.');
+            toast.error('Verification failed - if you were charged, contact support.');
             setLoading(false);
           }
         },
@@ -151,18 +212,13 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
       rzp.open();
       // Note: setLoading(false) is handled inside handler/ondismiss
     } catch {
-      setError('Network error — please try again');
+      toast.error('Network error - please try again');
       setLoading(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
-        <div className="rounded-xl border-2 border-red-400 bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
-          {error}
-        </div>
-      )}
 
       {/* Name */}
       <Field label="Full Name *">
@@ -253,7 +309,7 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
       </div>
 
       {/* Email */}
-      <Field label="Email Address *" hint="Never shown publicly — only revealed on paid unlock">
+      <Field label="Email Address *" hint="Never shown publicly - only revealed on paid unlock">
         <input
           type="email"
           required
@@ -265,7 +321,7 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
       </Field>
 
       {/* Phone */}
-      <Field label="Phone Number" hint="Optional — included in recruiter unlock">
+      <Field label="Phone Number" hint="Optional - included in recruiter unlock">
         <input
           type="tel"
           placeholder="+1 555 000 0000"
@@ -300,7 +356,7 @@ export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps)
         disabled={loading}
         className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-foreground bg-accent py-3 font-bold text-white shadow-pop transition-all hover:-translate-y-0.5 hover:shadow-pop-hover active:translate-y-0 active:shadow-pop-active disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {loading ? 'Opening checkout…' : <span className="flex items-center justify-center gap-2">Pay ${form.bidDollars || '—'} &amp; Get Listed <ArrowRight className="h-4 w-4 shrink-0" /></span>}
+        {loading ? 'Opening checkout…' : <span className="flex items-center justify-center gap-2">Pay ${form.bidDollars || '-'} &amp; Get Listed <ArrowRight className="h-4 w-4 shrink-0" /></span>}
       </button>
 
       <p className="text-center text-xs text-muted-foreground">

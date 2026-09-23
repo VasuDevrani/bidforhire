@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Infinity } from 'lucide-react';
 import { loadRazorpayCheckout } from '@/lib/razorpay-checkout';
 import { FREE_UNLOCKS_PER_RECRUITER } from '@/lib/constants';
+import { toast } from '@/components/Toast';
 
 interface UnlockButtonProps {
   candidateId: string;
@@ -23,12 +24,50 @@ export function UnlockButton({
 }: UnlockButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!loading) return;
+
+    let pollCount = 0;
+    const interval = setInterval(async () => {
+      pollCount++;
+      try {
+        const res = await fetch(`/api/checkout/status?flow=unlock&candidateId=${candidateId}`);
+        const data = await res.json();
+        if (data.completed) {
+          clearInterval(interval);
+          router.refresh();
+        }
+      } catch {}
+      if (pollCount > 20) clearInterval(interval);
+    }, 2000);
+
+    const onVisible = async () => {
+      if (document.visibilityState === 'visible') {
+        try {
+          const res = await fetch(`/api/checkout/status?flow=unlock&candidateId=${candidateId}`);
+          const data = await res.json();
+          if (data.completed) {
+            clearInterval(interval);
+            router.refresh();
+          }
+        } catch {}
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onVisible);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onVisible);
+    };
+  }, [loading, candidateId, router]);
 
   // ── Free unlock (no payment) ─────────────────────────────────────────────
   async function handleFreeUnlock() {
     setLoading(true);
-    setError('');
     try {
       const res = await fetch('/api/recruiter/unlock-free', {
         method: 'POST',
@@ -42,13 +81,13 @@ export function UnlockButton({
         return;
       }
       if (!res.ok) {
-        setError(data.error || 'Something went wrong');
+        toast.error(data.error || 'Something went wrong');
         setLoading(false);
         return;
       }
       router.refresh();
     } catch {
-      setError('Network error — please try again');
+      toast.error('Network error - please try again');
       setLoading(false);
     }
   }
@@ -56,7 +95,6 @@ export function UnlockButton({
   // ── Lifetime-access unlock (no payment, rate-limited) ────────────────────
   async function handleLifetimeUnlock() {
     setLoading(true);
-    setError('');
     try {
       const res = await fetch('/api/recruiter/unlock-lifetime', {
         method: 'POST',
@@ -71,18 +109,18 @@ export function UnlockButton({
         return;
       }
       if (res.status === 429) {
-        setError('Daily limit reached (20 unlocks/day). Try again tomorrow.');
+        toast.error('Daily limit reached (20 unlocks/day). Try again tomorrow.');
         setLoading(false);
         return;
       }
       if (!res.ok) {
-        setError(data.error || 'Something went wrong');
+        toast.error(data.error || 'Something went wrong');
         setLoading(false);
         return;
       }
       router.refresh();
     } catch {
-      setError('Network error — please try again');
+      toast.error('Network error - please try again');
       setLoading(false);
     }
   }
@@ -90,7 +128,6 @@ export function UnlockButton({
   // ── $10 lifetime-access checkout via Razorpay ────────────────────────────
   async function handleLifetimeCheckout() {
     setLoading(true);
-    setError('');
     try {
       const res = await fetch('/api/checkout/unlock', {
         method: 'POST',
@@ -105,14 +142,14 @@ export function UnlockButton({
         return;
       }
       if (!res.ok) {
-        setError(data.error || 'Something went wrong');
+        toast.error(data.error || 'Something went wrong');
         setLoading(false);
         return;
       }
 
       const ready = await loadRazorpayCheckout();
       if (!ready) {
-        setError('Could not load payment gateway — please check your connection and try again.');
+        toast.error('Could not load payment gateway - please check your connection and try again.');
         setLoading(false);
         return;
       }
@@ -124,12 +161,23 @@ export function UnlockButton({
         amount: data.amount,
         currency: data.currency,
         name: 'BidForHire',
-        description: 'Lifetime access — unlock any candidate, forever',
+        description: 'Lifetime access - unlock any candidate, forever',
         order_id: data.orderId,
         callback_url: callbackUrl,
+        redirect: true,
         theme: { color: '#6366f1' },
         modal: {
-          ondismiss: () => setLoading(false),
+          ondismiss: async () => {
+            try {
+              const res = await fetch(`/api/checkout/status?flow=unlock&candidateId=${candidateId}`);
+              const statusData = await res.json();
+              if (statusData.completed) {
+                router.refresh();
+                return;
+              }
+            } catch {}
+            setLoading(false);
+          },
         },
         handler: async (response) => {
           try {
@@ -144,13 +192,13 @@ export function UnlockButton({
             });
             const verifyData = await verifyRes.json();
             if (!verifyRes.ok || !verifyData.success) {
-              setError(verifyData.error || 'Payment verification failed. Contact support.');
+              toast.error(verifyData.error || 'Payment verification failed. Contact support.');
               setLoading(false);
               return;
             }
             router.refresh();
           } catch {
-            setError('Verification failed — if you were charged, contact support.');
+            toast.error('Verification failed - if you were charged, contact support.');
             setLoading(false);
           }
         },
@@ -158,7 +206,7 @@ export function UnlockButton({
 
       rzp.open();
     } catch {
-      setError('Network error — please try again');
+      toast.error('Network error - please try again');
       setLoading(false);
     }
   }
@@ -199,7 +247,6 @@ export function UnlockButton({
             </span>
           )}
         </button>
-        {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
       </div>
     );
   }
@@ -226,7 +273,6 @@ export function UnlockButton({
             </span>
           )}
         </button>
-        {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
       </div>
     );
   }
@@ -239,7 +285,7 @@ export function UnlockButton({
       </p>
       <p className="mb-4 text-sm text-muted-foreground">
         Get <span className="font-semibold text-foreground">lifetime access</span> for a one-time
-        fee of <span className="font-semibold text-accent">$10</span> — then unlock any candidate
+        fee of <span className="font-semibold text-accent">$10</span> - then unlock any candidate
         for free (up to 20/day), forever.
       </p>
       <button
@@ -249,11 +295,10 @@ export function UnlockButton({
       >
         {loading ? 'Opening checkout…' : (
           <span className="flex items-center gap-2">
-            Get Lifetime Access — $10 <ArrowRight className="h-4 w-4 shrink-0" />
+            Get Lifetime Access - $10 <ArrowRight className="h-4 w-4 shrink-0" />
           </span>
         )}
       </button>
-      {error && <p className="mt-2 text-center text-sm text-red-500 font-medium">{error}</p>}
     </div>
   );
 }
