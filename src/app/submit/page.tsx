@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 interface SubmitPageProps {
-  searchParams: { minBid?: string };
+  searchParams: { minBid?: string; error?: string };
 }
 
 export default async function SubmitPage({ searchParams }: SubmitPageProps) {
@@ -75,7 +75,7 @@ export default async function SubmitPage({ searchParams }: SubmitPageProps) {
       )}
 
       <div className="rounded-2xl border-2 border-foreground bg-card p-5 shadow-pop sm:p-6">
-        <SubmitForm initialMinBid={minBid} />
+        <SubmitForm initialMinBid={minBid} initialError={searchParams.error} />
       </div>
     </div>
   );

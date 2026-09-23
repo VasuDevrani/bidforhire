@@ -46,14 +46,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'sauravsaini98@gmail.com',
     phone: '+91-98765-43210',
-    currentBid: 950, // $9.50
+    currentBid: 900, // $9
     rank: 1,
     peakRank: 1,
     profileViews: 28,
     unlockCount: 2,
     bidCount: 1,
     daysListed: 2,
-    bidHistory: [950],
+    bidHistory: [900],
   },
 
   // ──────────────────────── INDIAN #2 ────────────────────────
@@ -74,14 +74,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'arbaazmansuri1999@gmail.com',
     phone: '+91-91234-56789',
-    currentBid: 750, // $7.50
+    currentBid: 800, // $8
     rank: 2,
     peakRank: 2,
     profileViews: 19,
     unlockCount: 1,
     bidCount: 1,
     daysListed: 2,
-    bidHistory: [750],
+    bidHistory: [800],
   },
 
   // ──────────────────────── FOREIGN #1 (UK) ──────────────────
@@ -103,14 +103,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'zack.adlington@gmail.com',
     phone: '+44-7700-900123',
-    currentBid: 620, // $6.20
+    currentBid: 700, // $7
     rank: 3,
     peakRank: 3,
     profileViews: 14,
     unlockCount: 1,
     bidCount: 1,
     daysListed: 1,
-    bidHistory: [620],
+    bidHistory: [700],
   },
 
   // ──────────────────────── INDIAN #3 ────────────────────────
@@ -132,14 +132,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'sudeep.shivashettar@gmail.com',
     phone: '+91-80234-56789',
-    currentBid: 480, // $4.80
+    currentBid: 600, // $6
     rank: 4,
     peakRank: 4,
     profileViews: 11,
     unlockCount: 1,
     bidCount: 1,
     daysListed: 1,
-    bidHistory: [480],
+    bidHistory: [600],
   },
 
   // ──────────────────────── FOREIGN #2 (UK) ──────────────────
@@ -159,14 +159,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'david.timms@outlook.com',
     phone: '+44-7700-900456',
-    currentBid: 350, // $3.50
+    currentBid: 500, // $5
     rank: 5,
     peakRank: 5,
     profileViews: 8,
     unlockCount: 1,
     bidCount: 1,
     daysListed: 1,
-    bidHistory: [350],
+    bidHistory: [500],
   },
 
   // ──────────────────────── INDIAN #4 ────────────────────────
@@ -186,14 +186,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'shanmugam.rsk@gmail.com',
     phone: '+91-44234-56789',
-    currentBid: 250, // $2.50
+    currentBid: 400, // $4
     rank: 6,
     peakRank: 6,
     profileViews: 6,
     unlockCount: 0,
     bidCount: 1,
     daysListed: 1,
-    bidHistory: [250],
+    bidHistory: [400],
   },
 
   // ──────────────────────── FOREIGN #3 (USA) ─────────────────
@@ -215,14 +215,14 @@ const candidates: CandidateSeedData[] = [
     ],
     email: 'tom@tomcritchlow.com',
     phone: '+1-646-555-0178',
-    currentBid: 180, // $1.80
+    currentBid: 300, // $3
     rank: 7,
     peakRank: 7,
     profileViews: 14,
     unlockCount: 0,
     bidCount: 1,
     daysListed: 2,
-    bidHistory: [180],
+    bidHistory: [300],
   },
 ];
 

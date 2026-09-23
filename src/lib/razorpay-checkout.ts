@@ -40,7 +40,9 @@ export interface RazorpayCheckoutOptions {
   notes?: Record<string, string>;
   theme?: { color?: string };
   modal?: { ondismiss?: () => void; confirm_close?: boolean };
-  handler: (response: RazorpayHandlerResponse) => void;
+  handler?: (response: RazorpayHandlerResponse) => void;
+  callback_url?: string;
+  redirect?: boolean;
 }
 
 // ── Global type augmentation ───────────────────────────────────────────────

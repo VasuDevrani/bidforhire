@@ -16,9 +16,10 @@ const SOCIAL_FIELDS = [
 
 interface SubmitFormProps {
   initialMinBid?: number; // in dollars
+  initialError?: string;
 }
 
-export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
+export function SubmitForm({ initialMinBid = 1, initialError }: SubmitFormProps) {
   const [companies, setCompanies] = useState<CompanyInfo[]>([]);
   const [form, setForm] = useState({
     name: '',
@@ -35,7 +36,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
     bidDollars: String(Math.max(initialMinBid, 1)),
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(initialError || '');
 
   function set(key: string, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -102,6 +103,8 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
         return;
       }
 
+      const callbackUrl = `${window.location.origin}/api/checkout/callback?flow=submit&candidateId=${data.candidateId}`;
+
       const rzp = new window.Razorpay({
         key: data.keyId ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
         amount: data.amount,
@@ -109,6 +112,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
         name: 'BidForHire',
         description: `Bid $${bidDollars} — get listed`,
         order_id: data.orderId,
+        callback_url: callbackUrl,
         prefill: { name: form.name, email: form.email },
         theme: { color: '#6366f1' },
         modal: {
@@ -118,7 +122,7 @@ export function SubmitForm({ initialMinBid = 1 }: SubmitFormProps) {
           },
         },
         handler: async (response) => {
-          // Step 3: verify the payment server-side and activate the listing
+          // Step 3: verify the payment server-side and activate the listing (fallback if modal completes in-place)
           try {
             const verifyRes = await fetch('/api/checkout/verify', {
               method: 'POST',

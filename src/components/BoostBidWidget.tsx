@@ -72,6 +72,8 @@ export function BoostBidWidget({
         return;
       }
 
+      const callbackUrl = `${window.location.origin}/api/checkout/callback?flow=boost&candidateId=${candidateId}`;
+
       const rzp = new window.Razorpay({
         key: data.keyId ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
         amount: data.amount,
@@ -79,6 +81,7 @@ export function BoostBidWidget({
         name: 'BidForHire',
         description: `Top-up $${topUpDollars} → new bid $${newTotalDollars}`,
         order_id: data.orderId,
+        callback_url: callbackUrl,
         theme: { color: '#6366f1' },
         modal: { ondismiss: () => setLoading(false) },
         handler: async (response) => {

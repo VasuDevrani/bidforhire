@@ -117,6 +117,8 @@ export function UnlockButton({
         return;
       }
 
+      const callbackUrl = `${window.location.origin}/api/checkout/callback?flow=unlock&candidateId=${candidateId}`;
+
       const rzp = new window.Razorpay({
         key: data.keyId ?? process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? '',
         amount: data.amount,
@@ -124,6 +126,7 @@ export function UnlockButton({
         name: 'BidForHire',
         description: 'Lifetime access — unlock any candidate, forever',
         order_id: data.orderId,
+        callback_url: callbackUrl,
         theme: { color: '#6366f1' },
         modal: {
           ondismiss: () => setLoading(false),
