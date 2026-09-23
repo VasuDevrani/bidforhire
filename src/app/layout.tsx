@@ -5,14 +5,40 @@ import Link from 'next/link';
 import NextTopLoader from 'nextjs-toploader';
 import { ToastContainer } from '@/components/Toast';
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://bidforhire.lol';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
     template: '%s | BidForHire',
   },
   description:
     'Candidates bid for visibility. Recruiters pay once to unlock contact info. The open hiring leaderboard.',
-  openGraph: { siteName: 'BidForHire', type: 'website' },
+  openGraph: {
+    title: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
+    description:
+      'Candidates bid for visibility. Recruiters pay once to unlock contact info. The open hiring leaderboard.',
+    url: siteUrl,
+    siteName: 'BidForHire',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1024,
+        height: 764,
+        alt: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BidForHire — Pay-to-Rank Hiring Leaderboard',
+    description:
+      'Candidates bid for visibility. Recruiters pay once to unlock contact info. The open hiring leaderboard.',
+    images: ['/og-image.png'],
+  },
   icons: { icon: '/favicon.svg' },
 };
 
