@@ -74,7 +74,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <span className="gradient-text squiggle-underline">get hired.</span>
               </h1>
               <p className="mt-1 text-sm font-medium text-muted-foreground">
-                Bid for visibility · Recruiters pay once unlock contact
+                Bid for visibility · Recruiters pay once to unlock contact
               </p>
             </div>
 
